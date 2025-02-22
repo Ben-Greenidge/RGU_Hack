@@ -237,6 +237,12 @@
   .resize {
     resize: both;
   }
+  .flex-col {
+    flex-direction: column;
+  }
+  .flex-row {
+    flex-direction: row;
+  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;

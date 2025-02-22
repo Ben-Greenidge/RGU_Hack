@@ -130,7 +130,8 @@
                         properties: {
                             name: pipeline.name,
                             color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00"
-                        }
+                        },
+                        type: "pipeline"
                     }));
                 })
                 .catch(error => console.error('Error loading pipeline data:', error));
@@ -230,8 +231,8 @@
                     <div><b>${d.name}</b></div>
                     <div>${d.description}</div>
                 `)
-                .onPointClick(handlePointClick)
-                .onPathClick(handlePipelineClick)
+                .onPointClick(d => handlePointClick(d))
+                .onPathClick(d => handlePointClick(d))
                 .labelText('label')
                 .labelSize(1.7)
                 .labelDotRadius(0.4)
@@ -241,16 +242,35 @@
         }
 
         function handlePointClick(point) {
-            console.log("Point clicked:", point);
+            console.log("Point clicked:", point.type);
             //alert(`You clicked on: ${point.name}\nDescription: ${point.description}`);
-            document.getElementById('popup-title').textContent = point
-            my_modal_5.showModal()
-        }
-        
-        // Function to handle pipeline clicks
-        function handlePipelineClick(path) {
-            console.log("Pipeline clicked:", path);
-            //alert(`Pipeline: ${path.properties.name}\nStatus: ${path.properties.color === "#ff0000" ? "Degraded" : "Healthy"}`);
+            
+
+            switch (point.type) {
+                case ("subseaAsset"):
+                    document.getElementById('popup-title').textContent = `${point.name} (Subsea Asset)`
+                    console.log("Clicked a subsea asset")
+                    document.getElementById('popup-body').innerHTML = `
+                    <div>Latitude: ${point.lat}</div>
+                    <div>Longitude: ${point.lng}</div>
+                    `
+                    break;
+                case ("pointOfInterest"):
+                    document.getElementById('popup-title').textContent = `${point.name} (Point of Interest)`
+                    console.log("Clicked a pointOfInterest")
+                    break;
+                case ("surfVessel"):
+                    document.getElementById('popup-title').textContent = `${point.name} (Surf Vessel)`
+                    console.log("Clicked a surfVessel")
+                    break;
+                case ("pipeline"):
+                    document.getElementById('popup-title').textContent = `${point.properties.name} (Pipeline)`
+                    console.log("Clicked a pipeline")
+                    break;
+                default:
+                    break
+            }
+
             my_modal_5.showModal()
         }
 
