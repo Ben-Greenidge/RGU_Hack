@@ -246,6 +246,9 @@
   .flex-row {
     flex-direction: row;
   }
+  .justify-end {
+    justify-content: flex-end;
+  }
   .overflow-hidden {
     overflow: hidden;
   }
