@@ -276,10 +276,12 @@
                     break;
                 case ("pointOfInterest"):
                     document.getElementById('popup-title').textContent = `${point.name} (Point of Interest)`
+                    document.getElementById('popup-body').innerHTML = ``
                     console.log("Clicked a pointOfInterest")
                     break;
                 case ("surfVessel"):
                     document.getElementById('popup-title').textContent = `${point.name} (Surf Vessel)`
+                    document.getElementById('popup-body').innerHTML = ``
                     console.log("Clicked a surfVessel")
                     break;
                 case ("pipeline"):
