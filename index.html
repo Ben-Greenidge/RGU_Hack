@@ -38,12 +38,12 @@
         </div>
     </div>
     
-    <div id="globeSettings">
-        <div>
+    <!-- Drawer -->
+    <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content p-6">
             <h1>Filters</h1>
-        </div>
-        <div class="flex flex-col">
-            <div class="flex flex-row">
+            <div class="flex flex-row mt-4">
                 <label>
                     Assets
                     <input id="showAssets" checked="checked" type="checkbox" class="checkbox"/>
@@ -54,8 +54,14 @@
                 </label>
             </div>
         </div>
+        <div>
+            
+        </div>
+        <div class="drawer-side drawer-open">
+            <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+            </ul>
+        </div>
     </div>
-
     
 
     <!-- <button class="btn" onclick="my_modal_5.showModal()">open modal</button> -->
@@ -101,9 +107,23 @@
         // }
 
         const toggleView = document.querySelector("#toggleView");
+        const settings = document.getElementById('globeSettings');
 
-        document.getElementById('toggleView').addEventListener("click", function() {
-            toggleView.checked = !checked;
+        toggleView.addEventListener('change', function() {
+            if (drawerToggle.checked) {
+                drawer.classList.remove('translate-x-full');
+                drawer.classList.add('translate-x-0');
+            } else {
+                drawer.classList.remove('translate-x-0');
+                drawer.classList.add('translate-x-full');
+            }
+        });
+
+        // Prevent the drawer from closing by clicking anywhere else
+        document.body.addEventListener('click', (event) => {
+            if (!drawer.contains(event.target) && !drawerToggle.contains(event.target)) {
+                event.stopImmediatePropagation();
+            }
         });
 
         function loadSubseaPipelines() {
