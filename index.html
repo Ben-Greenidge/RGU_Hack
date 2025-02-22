@@ -93,6 +93,7 @@
         let pipelinesData = [];
         let pointsOfInterestData = [];
         let subseaAssets = [];
+        let surfVessels = [];
 
         const globe = Globe()
             .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
@@ -153,6 +154,26 @@
                 .catch(error => console.error('Error loading pipeline data:', error));
         }
 
+        function loadSurfVessel() {
+            return fetch('../data/surfVessels.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    //console.log("Vessel data:",response.json())
+                    return response.json();
+                })
+                .then(data => {
+                    surfVessels = data.map(point => ({
+                        lat: point.coordinates.latitude,
+                        lng: point.coordinates.longitude,
+                        name: point.name,
+                        type: "surfVessel"
+                    }));
+                })
+                .catch(error => console.error('Error loading points of interest data:', error));
+        }
+
         function loadSubseaAssets() {
             return fetch('../data/subseaAssets.json')
                 .then(response => {
@@ -193,7 +214,7 @@
         }
 
         function initializeGlobe() {
-            console.log(pointsOfInterestData.concat(subseaAssets))
+            console.log(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
             globe
                 .pathsData(pipelinesData)
                 .pathPoints('coords')
@@ -204,7 +225,7 @@
                 .pathDashLength(0.1)
                 .pathDashGap(0.008)
                 .pathDashAnimateTime(12000)
-                .pointsData(pointsOfInterestData.concat(subseaAssets))
+                .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
                 .pointLat(d => d.lat)
                 .pointLng(d => d.lng)
        
@@ -217,8 +238,10 @@
                 .pointColor(d => {
                     if (d.type == 'pointOfInterest') {
                         return '#0349fc'
-                    } else {
-                        return '#ff6600'
+                    } else if (d.type == 'subseaAsset') {
+                        return '#ffcc00'
+                    } else if (d.type == 'surfVessel') {
+                        return '#fc3503'
                     }
                 })
                 .labelLabel(d => `
@@ -249,7 +272,7 @@
             my_modal_5.showModal()
         }
 
-        Promise.all([loadSubseaPipelines(), loadPointsOfInterest(), loadSubseaAssets()])
+        Promise.all([loadSubseaPipelines(), loadPointsOfInterest(), loadSubseaAssets(), loadSurfVessel()])
             .then(() => initializeGlobe())
             //.then(() => globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.3 }, 1000));
             .then(() => {
