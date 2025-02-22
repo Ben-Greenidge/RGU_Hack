@@ -131,7 +131,15 @@
                             name: pipeline.name,
                             color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00"
                         },
-                        type: "pipeline"
+                        type: "pipeline",
+                        health: pipeline.health,
+                        pressure: pipeline.pressure,
+                        temperature: pipeline.temperature,
+                        flow_rate: pipeline.flow_rate,
+                        last_inspection: pipeline.last_inspection,
+                        next_maintenance: pipeline.next_maintenance,
+                        alerts: pipeline.alerts,
+                        open_anomaly_count: pipeline.open_anomaly_count
                     }));
                 })
                 .catch(error => console.error('Error loading pipeline data:', error));
@@ -266,6 +274,12 @@
                 case ("pipeline"):
                     document.getElementById('popup-title').textContent = `${point.properties.name} (Pipeline)`
                     console.log("Clicked a pipeline")
+                    document.getElementById('popup-body').innerHTML = `
+                    <div>Health: ${point.health}</div>
+                    <div>Temperature: ${point.temperature}°C</div>
+                    <div>Pressure: ${point.pressure}</div>
+                    <div>Flow Rate: ${point.flow_rate}</div>
+                    `
                     break;
                 default:
                     break
@@ -281,7 +295,7 @@
                 globe.pointOfView({ lat: 0, lng: -30, altitude: 3.0 }, 0);
 
                 setTimeout(() => {
-                    globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.3 }, 3000);
+                    globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
                 }, 1000);
             })
     
