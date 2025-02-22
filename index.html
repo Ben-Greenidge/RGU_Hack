@@ -103,7 +103,8 @@
         }
 
         Promise.all([loadSubseaPipelines(), loadPointsOfInterest()])
-            .then(() => initializeGlobe());
+            .then(() => initializeGlobe())
+            .then(() => globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 2.0 }, 1000));
     </script>
 </body>
 </html>
