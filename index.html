@@ -1,286 +1,344 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <style>
-        body { margin: 0; }
-        #globeViz { width: 100vw; height: 100vh; }
-    </style>
-    <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
-    <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <!-- <link rel="stylesheet" href="style.css"> -->
-    <!-- <script src="script.js"></script> -->
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="output.css">
-</head>
-<body class="overflow-x-hidden" data-theme="night">
-    <div id="globeViz" class="fixed"></div>
-    <div class="header">
-        <div class="logo">
-            <div class="logo-icon">
-                <div class="circle circle-1"></div>
-                <div class="circle circle-2"></div>
-                <div class="circle circle-3"></div>
-            </div>
-            <div class="logo-text">
-                <span>e</span><span>lementz</span>
-            </div>
-        </div>
-        <div class="controls flex justify-end">
-            <label class="swap">
-                <!-- this hidden checkbox controls the state -->
-                <input id="toggleView" type="checkbox" checked/>
-              <svg class="swap-off" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/></svg>
-              <svg class="swap-on" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>
-            </label>
-            <button class="toggle-btn" id="themeToggle">Dark Mode</button>
-        </div>
+ <head>
+  <style>
+   body {
+    margin: 0;
+   }
+   #globeViz {
+    width: 100vw;
+    height: 100vh;
+   }
+  </style>
+  <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
+  <link
+   href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
+   rel="stylesheet"
+   type="text/css"
+  />
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="style.css" />
+  <!-- <script src="script.js"></script> -->
+  <script src="script.js"></script>
+  <link rel="stylesheet" href="output.css" />
+ </head>
+ <body class="overflow-x-hidden" data-theme="night">
+  <div id="globeViz" class="fixed"></div>
+  <div class="header">
+   <div class="logo">
+    <div class="logo-icon">
+     <div class="circle circle-1"></div>
+     <div class="circle circle-2">
+      <img src="logo_b.png" alt="Bug_Busters_Logo" />
+     </div>
+     <div class="circle circle-3"></div>
     </div>
-    
-    <!-- Drawer -->
-    <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
-        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content p-6">
-            <h1>Filters</h1>
-            <div class="flex flex-row mt-4">
-                <label>
-                    Assets
-                    <input id="showAssets" checked="checked" type="checkbox" class="checkbox"/>
-                </label>
-                <label>
-                    Pipelines
-                    <input id="showPipelines" checked="checked" type="checkbox" class="checkbox"/>
-                </label>
-            </div>
-        </div>
-        <div>
-            
-        </div>
-        <div class="drawer-side drawer-open">
-            <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            </ul>
-        </div>
+    <div class="logo-text"><span>e</span><span>lementz</span></div>
+   </div>
+   <div class="controls flex justify-end">
+    <label class="swap">
+     <!-- this hidden checkbox controls the state -->
+     <input id="toggleView" type="checkbox" checked />
+     <svg
+      class="swap-off"
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="#5f6368"
+     >
+      <path
+       d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"
+      />
+     </svg>
+     <svg
+      class="swap-on"
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="#5f6368"
+     >
+      <path
+       d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"
+      />
+     </svg>
+    </label>
+    <button class="toggle-btn" id="themeToggle">Dark Mode</button>
+   </div>
+  </div>
+
+  <!-- Drawer -->
+  <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
+   <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+   <div class="drawer-content p-6">
+    <h1>Filters</h1>
+    <div class="flex flex-row mt-4">
+     <label>
+      Assets
+      <input
+       id="showAssets"
+       checked="checked"
+       type="checkbox"
+       class="checkbox"
+      />
+     </label>
+     <label>
+      Pipelines
+      <input
+       id="showPipelines"
+       checked="checked"
+       type="checkbox"
+       class="checkbox"
+      />
+     </label>
     </div>
-    
+   </div>
+   <div></div>
+   <div class="drawer-side drawer-open">
+    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4"></ul>
+   </div>
+  </div>
 
-    <!-- <button class="btn" onclick="my_modal_5.showModal()">open modal</button> -->
-    <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box">
-        <h3 id="popup-title" class="text-lg font-bold">Hello!</h3>
-        <p id="popup-body" class="py-4">Press ESC key or click the button below to close</p>
-        <div class="modal-action">
-        <form method="dialog">
-            <!-- if there is a button in form, it will close the modal -->
-            <button class="btn">Close</button>
-        </form>
-        </div>
+  <!-- <button class="btn" onclick="my_modal_5.showModal()">open modal</button> -->
+  <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+   <div class="modal-box">
+    <h3 id="popup-title" class="text-lg font-bold">Hello!</h3>
+    <p id="popup-body" class="py-4">
+     Press ESC key or click the button below to close
+    </p>
+    <div class="modal-action">
+     <form method="dialog">
+      <!-- if there is a button in form, it will close the modal -->
+      <button class="btn">Close</button>
+     </form>
     </div>
-    </dialog>
+   </div>
+  </dialog>
 
-    <script>
-        let pipelinesData = [];
-        let pointsOfInterestData = [];
-        let subseaAssets = [];
-        let surfVessels = [];
+  <script>
+   let pipelinesData = [];
+   let pointsOfInterestData = [];
+   let subseaAssets = [];
+   let surfVessels = [];
 
-        const globe = Globe()
-            .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
-            .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-            .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
-            .width(window.innerWidth)
-            .height(window.innerHeight);
+   const globe = Globe()
+    .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-dark.jpg")
+    .bumpImageUrl(
+     "https://unpkg.com/three-globe/example/img/earth-topology.png"
+    )
+    .backgroundImageUrl(
+     "https://unpkg.com/three-globe/example/img/night-sky.png"
+    )
+    .width(window.innerWidth)
+    .height(window.innerHeight);
 
-        globe(document.getElementById('globeViz'));
+   globe(document.getElementById("globeViz"));
 
-        // function toggleSettings(sender) {
-        //     if (sender.value) {
-        //         document.getElementById('globeSettings').classList.remove('hidden');
-        //         console.log('checked is true')
-        //         sender.value = true;
+   // function toggleSettings(sender) {
+   //     if (sender.value) {
+   //         document.getElementById('globeSettings').classList.remove('hidden');
+   //         console.log('checked is true')
+   //         sender.value = true;
 
-        //     } else {
-        //         document.getElementById('globeSettings').classList.add('hidden');
-        //         console.log('checkd is false');
-        //         sender.value = false;
-        //     }
-        // }
+   //     } else {
+   //         document.getElementById('globeSettings').classList.add('hidden');
+   //         console.log('checkd is false');
+   //         sender.value = false;
+   //     }
+   // }
 
-        const toggleView = document.querySelector("#toggleView");
-        const settings = document.getElementById('globeSettings');
+   const toggleView = document.querySelector("#toggleView");
+   const settings = document.getElementById("globeSettings");
 
-        toggleView.addEventListener('change', function() {
-            if (toggleView.checked) {
-                settings.classList.remove('translate-x-full');
-                settings.classList.add('translate-x-0');
-            } else {
-                settings.classList.remove('translate-x-0');
-                settings.classList.add('translate-x-full');
-            }
-        });
+   toggleView.addEventListener("change", function () {
+    if (toggleView.checked) {
+     settings.classList.remove("translate-x-full");
+     settings.classList.add("translate-x-0");
+    } else {
+     settings.classList.remove("translate-x-0");
+     settings.classList.add("translate-x-full");
+    }
+   });
 
-        function loadSubseaPipelines() {
-            return fetch('../data/subseaPipelines.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    pipelinesData = data.map(pipeline => ({
-                        coords: [
-                            [pipeline.start_coordinates.coordinates.longitude, pipeline.start_coordinates.coordinates.latitude],
-                            [pipeline.end_coordinates.coordinates.longitude, pipeline.end_coordinates.coordinates.latitude]
-                        ],
-                        properties: {
-                            name: pipeline.name,
-                            color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00"
-                        },
-                        type: "pipeline",
-                        health: pipeline.health,
-                        pressure: pipeline.pressure,
-                        temperature: pipeline.temperature,
-                        flow_rate: pipeline.flow_rate,
-                        last_inspection: pipeline.last_inspection,
-                        next_maintenance: pipeline.next_maintenance,
-                        alerts: pipeline.alerts,
-                        open_anomaly_count: pipeline.open_anomaly_count
-                    }));
-                })
-                .catch(error => console.error('Error loading pipeline data:', error));
-        }
+   function loadSubseaPipelines() {
+    return fetch("../data/subseaPipelines.json")
+     .then((response) => {
+      if (!response.ok) {
+       throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+     })
+     .then((data) => {
+      pipelinesData = data.map((pipeline) => ({
+       coords: [
+        [
+         pipeline.start_coordinates.coordinates.longitude,
+         pipeline.start_coordinates.coordinates.latitude,
+        ],
+        [
+         pipeline.end_coordinates.coordinates.longitude,
+         pipeline.end_coordinates.coordinates.latitude,
+        ],
+       ],
+       properties: {
+        name: pipeline.name,
+        color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00",
+       },
+       type: "pipeline",
+       health: pipeline.health,
+       pressure: pipeline.pressure,
+       temperature: pipeline.temperature,
+       flow_rate: pipeline.flow_rate,
+       last_inspection: pipeline.last_inspection,
+       next_maintenance: pipeline.next_maintenance,
+       alerts: pipeline.alerts,
+       open_anomaly_count: pipeline.open_anomaly_count,
+      }));
+     })
+     .catch((error) => console.error("Error loading pipeline data:", error));
+   }
 
-        function loadSurfVessel() {
-            return fetch('../data/surfVessels.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    //console.log("Vessel data:",response.json())
-                    return response.json();
-                })
-                .then(data => {
-                    surfVessels = data.map(point => ({
-                        lat: point.coordinates.latitude,
-                        lng: point.coordinates.longitude,
-                        name: point.name,
-                        type: "surfVessel",
-                        vessel_type: point.vessel_type,
-                        heading: point.heading,
-                        speed: point.speed,
-                        destination: point.destination,
-                        status: point.status,
-                        crew_count: point.crew_count,
-                        fuel_level: point.fuel_level
-                    }));
-                })
-                .catch(error => console.error('Error loading points of interest data:', error));
-        }
+   function loadSurfVessel() {
+    return fetch("../data/surfVessels.json")
+     .then((response) => {
+      if (!response.ok) {
+       throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      //console.log("Vessel data:",response.json())
+      return response.json();
+     })
+     .then((data) => {
+      surfVessels = data.map((point) => ({
+       lat: point.coordinates.latitude,
+       lng: point.coordinates.longitude,
+       name: point.name,
+       type: "surfVessel",
+       vessel_type: point.vessel_type,
+       heading: point.heading,
+       speed: point.speed,
+       destination: point.destination,
+       status: point.status,
+       crew_count: point.crew_count,
+       fuel_level: point.fuel_level,
+      }));
+     })
+     .catch((error) =>
+      console.error("Error loading points of interest data:", error)
+     );
+   }
 
-        function loadSubseaAssets() {
-            return fetch('../data/subseaAssets.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    subseaAssets = data.map(point => ({
-                        lat: point.coordinates.coordinates.latitude,
-                        lng: point.coordinates.coordinates.longitude,
-                        name: point.name,
-                        type: "subseaAsset",
-                        health: point.health,
-                        depth: point.coordinates.depth,
-                        pressure: point.pressure,
-                        temperature: point.temperature,
-                        flow_rate: point.flow_rate,
-                        alerts: point.alerts,
-                        connected_assets: point.connected_assets,
-                        open_anomaly_count: point.open_anomaly_count,
-                        workpacks_at_site_count: point.workpacks_at_site_count
-                    }));
-                })
-                .catch(error => console.error('Error loading points of interest data:', error));
-        }
+   function loadSubseaAssets() {
+    return fetch("../data/subseaAssets.json")
+     .then((response) => {
+      if (!response.ok) {
+       throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+     })
+     .then((data) => {
+      subseaAssets = data.map((point) => ({
+       lat: point.coordinates.coordinates.latitude,
+       lng: point.coordinates.coordinates.longitude,
+       name: point.name,
+       type: "subseaAsset",
+       health: point.health,
+       depth: point.coordinates.depth,
+       pressure: point.pressure,
+       temperature: point.temperature,
+       flow_rate: point.flow_rate,
+       alerts: point.alerts,
+       connected_assets: point.connected_assets,
+       open_anomaly_count: point.open_anomaly_count,
+       workpacks_at_site_count: point.workpacks_at_site_count,
+      }));
+     })
+     .catch((error) =>
+      console.error("Error loading points of interest data:", error)
+     );
+   }
 
-        function loadPointsOfInterest() {
-            return fetch('../data/pointsOfInterest.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    pointsOfInterestData = data.map(point => ({
-                        lat: point.coordinates.latitude,
-                        lng: point.coordinates.longitude,
-                        name: point.name,
-                        description: point.description,
-                        type: "pointOfInterest"
-                    }));
-                })
-                .catch(error => console.error('Error loading points of interest data:', error));
-        }
+   function loadPointsOfInterest() {
+    return fetch("../data/pointsOfInterest.json")
+     .then((response) => {
+      if (!response.ok) {
+       throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+     })
+     .then((data) => {
+      pointsOfInterestData = data.map((point) => ({
+       lat: point.coordinates.latitude,
+       lng: point.coordinates.longitude,
+       name: point.name,
+       description: point.description,
+       type: "pointOfInterest",
+      }));
+     })
+     .catch((error) =>
+      console.error("Error loading points of interest data:", error)
+     );
+   }
 
-        function initializeGlobe() {
-            console.log(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
-            globe
-                .pathsData(pipelinesData)
-                .pathPoints('coords')
-                .pathPointLat(p => p[1])
-                .pathPointLng(p => p[0])
-                .pathColor(path => path.properties.color)
-                .pathLabel(path => path.properties.name)
-                .pathDashLength(0.1)
-                .pathDashGap(0.008)
-                .pathDashAnimateTime(12000)
-                .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
-                .pointLat(d => d.lat)
-                .pointLng(d => d.lng)
-       
-                .pointRadius(0.05)
-                .pointAltitude(() => 0)
-      
-         
-        
-                .labelColor(() => '#ff6600')
-                .pointColor(d => {
-                    if (d.type == 'pointOfInterest') {
-                        return '#0349fc'
-                    } else if (d.type == 'subseaAsset') {
-                        return '#ffcc00'
-                    } else if (d.type == 'surfVessel') {
-                        return '#fc3503'
-                    }
-                })
-                .labelLabel(d => `
+   function initializeGlobe() {
+    console.log(pointsOfInterestData.concat(subseaAssets).concat(surfVessels));
+    globe
+     .pathsData(pipelinesData)
+     .pathPoints("coords")
+     .pathPointLat((p) => p[1])
+     .pathPointLng((p) => p[0])
+     .pathColor((path) => path.properties.color)
+     .pathLabel((path) => path.properties.name)
+     .pathDashLength(0.1)
+     .pathDashGap(0.008)
+     .pathDashAnimateTime(12000)
+     .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
+     .pointLat((d) => d.lat)
+     .pointLng((d) => d.lng)
+
+     .pointRadius(0.05)
+     .pointAltitude(() => 0)
+
+     .labelColor(() => "#ff6600")
+     .pointColor((d) => {
+      if (d.type == "pointOfInterest") {
+       return "#0349fc";
+      } else if (d.type == "subseaAsset") {
+       return "#ffcc00";
+      } else if (d.type == "surfVessel") {
+       return "#fc3503";
+      }
+     })
+     .labelLabel(
+      (d) => `
                     <div><b>${d.name}</b></div>
                     <div>${d.description}</div>
-                `)
-                .onPointClick(d => handlePointClick(d))
-                .onPathClick(d => handlePointClick(d))
-                .labelText('label')
-                .labelSize(1.7)
-                .labelDotRadius(0.4)
-                .labelDotOrientation(d => labelsTopOrientation.has(d.label) ? 'top' : 'bottom')
-           
-                .onLabelClick(d => window.open(d.url, '_blank'));
-        }
+                `
+     )
+     .onPointClick((d) => handlePointClick(d))
+     .onPathClick((d) => handlePointClick(d))
+     .labelText("label")
+     .labelSize(1.7)
+     .labelDotRadius(0.4)
+     .labelDotOrientation((d) =>
+      labelsTopOrientation.has(d.label) ? "top" : "bottom"
+     )
 
-        function handlePointClick(point) {
-            console.log("Point clicked:", point.type);
-            //alert(`You clicked on: ${point.name}\nDescription: ${point.description}`);
-            
+     .onLabelClick((d) => window.open(d.url, "_blank"));
+   }
 
-            switch (point.type) {
-                case ("subseaAsset"):
-                    document.getElementById('popup-title').textContent = `${point.name} (Subsea Asset)`
-                    console.log("Clicked a subsea asset")
-                    document.getElementById('popup-body').innerHTML = `
+   function handlePointClick(point) {
+    console.log("Point clicked:", point.type);
+    //alert(`You clicked on: ${point.name}\nDescription: ${point.description}`);
+
+    switch (point.type) {
+     case "subseaAsset":
+      document.getElementById(
+       "popup-title"
+      ).textContent = `${point.name} (Subsea Asset)`;
+      console.log("Clicked a subsea asset");
+      document.getElementById("popup-body").innerHTML = `
                     <div>Latitude: ${point.lat}</div>
                     <div>Longitude: ${point.lng}</div>
                     <div>Health: ${point.health}</div>
@@ -292,16 +350,20 @@
                     <div>Connected Assets: ${point.connected_assets}</div>
                     <div>Open Anomaly Count: ${point.open_anomaly_count}</div>
                     <div>Workpacks on Site: ${point.workpacks_at_site_count}</div>
-                    `
-                    break;
-                case ("pointOfInterest"):
-                    document.getElementById('popup-title').textContent = `${point.name} (Point of Interest)`
-                    document.getElementById('popup-body').innerHTML = ``
-                    console.log("Clicked a pointOfInterest")
-                    break;
-                case ("surfVessel"):
-                    document.getElementById('popup-title').textContent = `${point.name} (Surf Vessel)`
-                    document.getElementById('popup-body').innerHTML = `
+                    `;
+      break;
+     case "pointOfInterest":
+      document.getElementById(
+       "popup-title"
+      ).textContent = `${point.name} (Point of Interest)`;
+      document.getElementById("popup-body").innerHTML = ``;
+      console.log("Clicked a pointOfInterest");
+      break;
+     case "surfVessel":
+      document.getElementById(
+       "popup-title"
+      ).textContent = `${point.name} (Surf Vessel)`;
+      document.getElementById("popup-body").innerHTML = `
                     <div>Vessel Type: ${point.vessel_type}</div>
                     <div>Heading: ${point.heading}</div>
                     <div>Speed: ${point.speed}</div>
@@ -309,41 +371,43 @@
                     <div>Status: ${point.status}</div>
                     <div>Crew Count: ${point.crew_count}</div>
                     <div>Fuel Level: ${point.fuel_level}</div>
-                    `
-                    console.log("Clicked a surfVessel")
-                    break;
-                case ("pipeline"):
-                    document.getElementById('popup-title').textContent = `${point.properties.name} (Pipeline)`
-                    console.log("Clicked a pipeline")
-                    document.getElementById('popup-body').innerHTML = `
+                    `;
+      console.log("Clicked a surfVessel");
+      break;
+     case "pipeline":
+      document.getElementById(
+       "popup-title"
+      ).textContent = `${point.properties.name} (Pipeline)`;
+      console.log("Clicked a pipeline");
+      document.getElementById("popup-body").innerHTML = `
                     <div>Health: ${point.health}</div>
                     <div>Temperature: ${point.temperature}°C</div>
                     <div>Pressure: ${point.pressure}</div>
                     <div>Flow Rate: ${point.flow_rate}</div>
-                    `
-                    break;
-                default:
-                    break
-            }
+                    `;
+      break;
+     default:
+      break;
+    }
 
-            my_modal_5.showModal()
-        }
+    my_modal_5.showModal();
+   }
 
-        Promise.all([loadSubseaPipelines(), loadPointsOfInterest(), loadSubseaAssets(), loadSurfVessel()])
-            .then(() => initializeGlobe())
-            //.then(() => globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.3 }, 1000));
-            .then(() => {
-                globe.pointOfView({ lat: 0, lng: -30, altitude: 3.0 }, 0);
+   Promise.all([
+    loadSubseaPipelines(),
+    loadPointsOfInterest(),
+    loadSubseaAssets(),
+    loadSurfVessel(),
+   ])
+    .then(() => initializeGlobe())
+    //.then(() => globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.3 }, 1000));
+    .then(() => {
+     globe.pointOfView({ lat: 0, lng: -30, altitude: 3.0 }, 0);
 
-                setTimeout(() => {
-                    globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
-                }, 1000);
-            })
-    
-
-
-
-
-</script>
-</body>
+     setTimeout(() => {
+      globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
+     }, 1000);
+    });
+  </script>
+ </body>
 </html>
