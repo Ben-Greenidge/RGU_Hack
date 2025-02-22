@@ -14,7 +14,7 @@
     <script src="script.js"></script>
     <link rel="stylesheet" href="output.css">
 </head>
-<body class="overflow-x-hidden">
+<body class="overflow-x-hidden" data-theme="night">
     <div id="globeViz" class="fixed"></div>
     <div class="header">
         <div class="logo">
@@ -191,7 +191,16 @@
                         lat: point.coordinates.coordinates.latitude,
                         lng: point.coordinates.coordinates.longitude,
                         name: point.name,
-                        type: "subseaAsset"
+                        type: "subseaAsset",
+                        health: point.health,
+                        depth: point.coordinates.depth,
+                        pressure: point.pressure,
+                        temperature: point.temperature,
+                        flow_rate: point.flow_rate,
+                        alerts: point.alerts,
+                        connected_assets: point.connected_assets,
+                        open_anomaly_count: point.open_anomaly_count,
+                        workpacks_at_site_count: point.workpacks_at_site_count
                     }));
                 })
                 .catch(error => console.error('Error loading points of interest data:', error));
@@ -274,14 +283,25 @@
                     document.getElementById('popup-body').innerHTML = `
                     <div>Latitude: ${point.lat}</div>
                     <div>Longitude: ${point.lng}</div>
+                    <div>Health: ${point.health}</div>
+                    <div>Depth: ${point.depth}</div>
+                    <div>Pressure: ${point.pressure}</div>
+                    <div>Temperature: ${point.temperature}</div>
+                    <div>Flow Rate: ${point.flow_rate}</div>
+                    <div>Alerts: ${point.alerts}</div>
+                    <div>Connected Assets: ${point.connected_assets}</div>
+                    <div>Open Anomaly Count: ${point.open_anomaly_count}</div>
+                    <div>Workpacks on Site: ${point.workpacks_at_site_count}</div>
                     `
                     break;
                 case ("pointOfInterest"):
                     document.getElementById('popup-title').textContent = `${point.name} (Point of Interest)`
+                    document.getElementById('popup-body').innerHTML = ``
                     console.log("Clicked a pointOfInterest")
                     break;
                 case ("surfVessel"):
                     document.getElementById('popup-title').textContent = `${point.name} (Surf Vessel)`
+                    document.getElementById('popup-body').innerHTML = ``
                     console.log("Clicked a surfVessel")
                     break;
                 case ("pipeline"):
