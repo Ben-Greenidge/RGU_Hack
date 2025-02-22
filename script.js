@@ -1,21 +1,22 @@
-console.log("This loaded")
+console.log("This loaded");
 
-      function togglePanelVisibility() {
-        //console.log("function reached")
-          var globeSettings = document.getElementById('globeSettings');
-          console.log(globeSettings);
-          var visibleButton = document.getElementById('visible');
-          var hiddenButton = document.getElementById('hidden');
+function togglePanelVisibility() {
+ //console.log("function reached")
+ var globeSettings = document.getElementById("globeSettings");
+ console.log(globeSettings);
+ var visibleButton = document.getElementById("visible");
+ var hiddenButton = document.getElementById("hidden");
 
-          if (globeSettings.className == "none") {
-              globeSettings.className == "block";
-              visibleButton.className == "block";
-              hiddenButton.className == "hidden";
-              console.log('showing settings')
-          } else { //hide
-              globeSettings.className == "hidden";
-              visibleButton.className == "hidden";
-              hiddenButton.className == "block";
-              console.log('hiding settings')
-          }
-      }
+ if (globeSettings.className == "none") {
+  globeSettings.className = "block"; // Fix comparison operator
+  visibleButton.className = "block"; // Fix comparison operator
+  hiddenButton.className = "hidden"; // Fix comparison operator
+  console.log("showing settings");
+ } else {
+  //hide
+  globeSettings.className = "hidden"; // Fix comparison operator
+  visibleButton.className = "hidden"; // Fix comparison operator
+  hiddenButton.className = "block"; // Fix comparison operator
+  console.log("hiding settings");
+ }
+}
