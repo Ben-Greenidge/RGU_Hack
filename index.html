@@ -39,7 +39,7 @@
    <div class="controls flex justify-end">
     <label class="swap">
      <!-- this hidden checkbox controls the state -->
-     <input id="toggleView" type="checkbox" checked />
+     <input id="toggleView" type="checkbox"/>
      <svg
       class="swap-off"
       xmlns="http://www.w3.org/2000/svg"
@@ -151,6 +151,9 @@
 
    const toggleView = document.querySelector("#toggleView");
    const settings = document.getElementById("globeSettings");
+
+   // Initially keep the drawer hidden by applying translate-x-full
+    settings.classList.add('translate-x-full');
 
    toggleView.addEventListener("change", function () {
     if (toggleView.checked) {
