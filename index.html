@@ -42,7 +42,7 @@
     
     <label class="swap">
         <!-- this hidden checkbox controls the state -->
-        <input type="checkbox" />
+        <input id="toggleView" type="checkbox"/>
       
         <!-- volume on icon -->
         <!-- <svg
@@ -103,6 +103,32 @@
 
         globe(document.getElementById('globeViz'));
 
+        // function toggleSettings(sender) {
+        //     if (sender.value) {
+        //         document.getElementById('globeSettings').classList.remove('hidden');
+        //         console.log('checked is true')
+        //         sender.value = true;
+
+        //     } else {
+        //         document.getElementById('globeSettings').classList.add('hidden');
+        //         console.log('checkd is false');
+        //         sender.value = false;
+        //     }
+        // }
+
+        const toggleView = document.querySelector("#toggleView");
+
+        toggleView.addEventListener("click", function() {
+            console.log('clicked toggle view', toggleView.value)
+            if (toggleView.value == 'on') {
+                toggleView.value = 'off';
+                document.getElementById('globeSettings').classList.add('hidden')
+            } else {
+                toggleView.value = 'on';
+                document.getElementById('globeSettings').classList.remove('hidden')
+            }
+            
+        });
 
         function loadSubseaPipelines() {
             return fetch('../data/subseaPipelines.json')
