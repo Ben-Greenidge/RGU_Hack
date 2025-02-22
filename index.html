@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <style>
+        body { margin: 0; }
+        #globeViz { width: 100vw; height: 100vh; }
+    </style>
+    <!-- Make sure to include Three.js before Globe.gl -->
+    <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
 </head>
 <body>
-    
+    <div id="globeViz"></div>
+
+    <script>
+        // Initialize Globe without 'new' keyword
+        const globe = Globe()
+            .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+            .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+            .width(window.innerWidth)
+            .height(window.innerHeight);
+
+        // Mount the globe
+        globe(document.getElementById('globeViz'));
+
+        // For testing without the submarine cable data, you can use sample paths:
+        const samplePaths = [
+            {
+                coords: [
+                    [-73.9919, 40.7529],
+                    [0.1278, 51.5074]
+                ],
+                properties: {
+                    color: '#00ff00',
+                    name: 'Sample Cable'
+                }
+            }
+        ];
+
+        globe
+            .pathsData(samplePaths)
+            .pathPoints('coords')
+            .pathPointLat(p => p[1])
+            .pathPointLng(p => p[0])
+            .pathColor(path => path.properties.color)
+            .pathLabel(path => path.properties.name)
+            .pathDashLength(0.1)
+            .pathDashGap(0.008)
+            .pathDashAnimateTime(12000);
+
+        // If you want to try fetching the submarine cable data, you might need to use a CORS proxy:
+        /*
+        fetch('https://cors-anywhere.herokuapp.com/https://www.submarinecablemap.com/api/v3/cable/cable-geo.json')
+            .then(r => r.json())
+            .then(cablesGeo => {
+                let cablePaths = [];
+                cablesGeo.features.forEach(({ geometry, properties }) => {
+                    geometry.coordinates.forEach(coords => cablePaths.push({ coords, properties }));
+                });
+
+                globe
+                    .pathsData(cablePaths)
+                    .pathPoints('coords')
+                    .pathPointLat(p => p[1])
+                    .pathPointLng(p => p[0])
+                    .pathColor(path => path.properties.color)
+                    .pathLabel(path => path.properties.name)
+                    .pathDashLength(0.1)
+                    .pathDashGap(0.008)
+                    .pathDashAnimateTime(12000);
+            });
+        */
+    </script>
 </body>
 </html>
