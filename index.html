@@ -110,19 +110,12 @@
         const settings = document.getElementById('globeSettings');
 
         toggleView.addEventListener('change', function() {
-            if (drawerToggle.checked) {
-                drawer.classList.remove('translate-x-full');
-                drawer.classList.add('translate-x-0');
+            if (toggleView.checked) {
+                settings.classList.remove('translate-x-full');
+                settings.classList.add('translate-x-0');
             } else {
-                drawer.classList.remove('translate-x-0');
-                drawer.classList.add('translate-x-full');
-            }
-        });
-
-        // Prevent the drawer from closing by clicking anywhere else
-        document.body.addEventListener('click', (event) => {
-            if (!drawer.contains(event.target) && !drawerToggle.contains(event.target)) {
-                event.stopImmediatePropagation();
+                settings.classList.remove('translate-x-0');
+                settings.classList.add('translate-x-full');
             }
         });
 
