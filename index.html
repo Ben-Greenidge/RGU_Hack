@@ -5,7 +5,6 @@
         body { margin: 0; }
         #globeViz { width: 100vw; height: 100vh; }
     </style>
-    <!-- Make sure to include Three.js before Globe.gl -->
     <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
     <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
 </head>
@@ -13,7 +12,6 @@
     <div id="globeViz"></div>
 
     <script>
-        // Initialize Globe without 'new' keyword
         const globe = Globe()
             .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
             .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
@@ -21,46 +19,29 @@
             .width(window.innerWidth)
             .height(window.innerHeight);
 
-        // Mount the globe
         globe(document.getElementById('globeViz'));
 
-        // For testing without the submarine cable data, you can use sample paths:
-        const samplePaths = [
-            {
-                coords: [
-                    [-73.9919, 40.7529],
-                    [0.1278, 51.5074]
-                ],
-                properties: {
-                    color: '#00ff00',
-                    name: 'Sample Cable'
+        fetch('./subseaPipelines.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-            }
-        ];
-
-        globe
-            .pathsData(samplePaths)
-            .pathPoints('coords')
-            .pathPointLat(p => p[1])
-            .pathPointLng(p => p[0])
-            .pathColor(path => path.properties.color)
-            .pathLabel(path => path.properties.name)
-            .pathDashLength(0.1)
-            .pathDashGap(0.008)
-            .pathDashAnimateTime(12000);
-
-        // If you want to try fetching the submarine cable data, you might need to use a CORS proxy:
-        /*
-        fetch('https://cors-anywhere.herokuapp.com/https://www.submarinecablemap.com/api/v3/cable/cable-geo.json')
-            .then(r => r.json())
-            .then(cablesGeo => {
-                let cablePaths = [];
-                cablesGeo.features.forEach(({ geometry, properties }) => {
-                    geometry.coordinates.forEach(coords => cablePaths.push({ coords, properties }));
-                });
+                return response.json();
+            })
+            .then(data => {
+                const pipelinePaths = data.map(pipeline => ({
+                    coords: [
+                        [pipeline.start_coordinates.coordinates.longitude, pipeline.start_coordinates.coordinates.latitude],
+                        [pipeline.end_coordinates.coordinates.longitude, pipeline.end_coordinates.coordinates.latitude]
+                    ],
+                    properties: {
+                        name: pipeline.name,
+                        color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00"
+                    }
+                }));
 
                 globe
-                    .pathsData(cablePaths)
+                    .pathsData(pipelinePaths)
                     .pathPoints('coords')
                     .pathPointLat(p => p[1])
                     .pathPointLng(p => p[0])
@@ -69,8 +50,8 @@
                     .pathDashLength(0.1)
                     .pathDashGap(0.008)
                     .pathDashAnimateTime(12000);
-            });
-        */
+            })
+            .catch(error => console.error('Error loading pipeline data:', error));
     </script>
 </body>
 </html>
