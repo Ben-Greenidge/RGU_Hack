@@ -1,21 +1,19 @@
-body {
-    margin: 0;
-}
-
-/* Fariha added stuff*/
-
+/* Global Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Base Styles */
 body {
     font-family: Arial, sans-serif;
     transition: background-color 0.3s, color 0.3s;
     min-height: 100vh;
+    margin: 0;
 }
 
+/* Theme Styles */
 body.dark-mode {
     background-color: #0f172a;
     color: white;
@@ -26,6 +24,13 @@ body.light-mode {
     color: #0f172a;
 }
 
+/* Globe container */
+#globeViz {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Header Styles */
 .header {
     padding: 1rem;
     display: flex;
@@ -80,6 +85,7 @@ body.light-mode {
     color: #a855f7;
 }
 
+/* Control Styles */
 .controls {
     display: flex;
     gap: 1rem;
@@ -104,6 +110,7 @@ body.light-mode {
     color: #0f172a;
 }
 
+/* Settings Styles */
 .settings-container {
     position: relative;
 }
