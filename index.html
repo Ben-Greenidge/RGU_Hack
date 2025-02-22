@@ -165,7 +165,14 @@
                         lat: point.coordinates.latitude,
                         lng: point.coordinates.longitude,
                         name: point.name,
-                        type: "surfVessel"
+                        type: "surfVessel",
+                        vessel_type: point.vessel_type,
+                        heading: point.heading,
+                        speed: point.speed,
+                        destination: point.destination,
+                        status: point.status,
+                        crew_count: point.crew_count,
+                        fuel_level: point.fuel_level
                     }));
                 })
                 .catch(error => console.error('Error loading points of interest data:', error));
@@ -294,7 +301,15 @@
                     break;
                 case ("surfVessel"):
                     document.getElementById('popup-title').textContent = `${point.name} (Surf Vessel)`
-                    document.getElementById('popup-body').innerHTML = ``
+                    document.getElementById('popup-body').innerHTML = `
+                    <div>Vessel Type: ${point.vessel_type}</div>
+                    <div>Heading: ${point.heading}</div>
+                    <div>Speed: ${point.speed}</div>
+                    <div>Destination: ${point.destination}</div>
+                    <div>Status: ${point.status}</div>
+                    <div>Crew Count: ${point.crew_count}</div>
+                    <div>Fuel Level: ${point.fuel_level}</div>
+                    `
                     console.log("Clicked a surfVessel")
                     break;
                 case ("pipeline"):
