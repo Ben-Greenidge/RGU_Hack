@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        body.light-mode {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 32px;
+            height: 32px;
+        }
+
+        .circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .circle-1 {
+            background-color: #3b82f6;
+        }
+
+        .circle-2 {
+            background-color: #a855f7;
+            transform: translateX(8px);
+        }
+
+        .circle-3 {
+            background-color: #0f172a;
+            transform: translateX(4px);
+            mix-blend-mode: overlay;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-text span:first-child {
+            color: #3b82f6;
+        }
+
+        .logo-text span:last-child {
+            color: #a855f7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .toggle-btn {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .light-mode .toggle-btn {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .settings-container {
+            position: relative;
+        }
+
+        .settings-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            min-width: 200px;
+            display: none;
+        }
+
+        .dark-mode .settings-dropdown {
+            background-color: #1e293b;
+        }
+
+        .light-mode .settings-dropdown {
+            background-color: #e2e8f0;
+        }
+
+        .settings-dropdown.show {
+            display: block;
+        }
+
+        .settings-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .settings-option:hover {
+            background-color: #2d3748;
+        }
+
+        .light-mode .settings-option:hover {
+            background-color: #cbd5e1;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+            </div>
+            <div class="logo-text">
+                <span>e</span><span>lementz</span>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="toggle-btn" id="themeToggle">Dark Mode</button>
+            <button class="toggle-btn" id="settingsVisibilityToggle">Hide Settings</button>
+            <div class="settings-container" id="settingsContainer">
+                <button class="toggle-btn" id="settingsToggle">Settings ▼</button>
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <div class="settings-option">Visualization</div>
+                    <div class="settings-option">Filters</div>
+                    <div class="settings-option">Weather Alerts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const themeToggle = document.getElementById('themeToggle');
+        const settingsVisibilityToggle = document.getElementById('settingsVisibilityToggle');
+        const settingsContainer = document.getElementById('settingsContainer');
+        const settingsToggle = document.getElementById('settingsToggle');
+        const settingsDropdown = document.getElementById('settingsDropdown');
+
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? 'Dark Mode' : 'Light Mode';
+        });
+
+        // Settings visibility toggle
+        settingsVisibilityToggle.addEventListener('click', () => {
+            settingsContainer.style.display = settingsContainer.style.display === 'none' ? 'block' : 'none';
+            settingsVisibilityToggle.textContent = settingsContainer.style.display === 'none' ? 'Show Settings' : 'Hide Settings';
+        });
+
+        // Settings dropdown toggle
+        settingsToggle.addEventListener('click', () => {
+            settingsDropdown.classList.toggle('show');
+            settingsToggle.textContent = settingsDropdown.classList.contains('show') ? 'Settings ▲' : 'Settings ▼';
+        });
+
+        // Close settings dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!settingsContainer.contains(event.target)) {
+                settingsDropdown.classList.remove('show');
+                settingsToggle.textContent = 'Settings ▼';
+            }
+        });
+    </script>
+</body>
+</html>

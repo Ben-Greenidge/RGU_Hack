@@ -1,3 +1,147 @@
 body {
     margin: 0;
 }
+
+/* Fariha added stuff*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+}
+
+body.dark-mode {
+    background-color: #0f172a;
+    color: white;
+}
+
+body.light-mode {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+.header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
+.circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.circle-1 {
+    background-color: #3b82f6;
+}
+
+.circle-2 {
+    background-color: #a855f7;
+    transform: translateX(8px);
+}
+
+.circle-3 {
+    background-color: #0f172a;
+    transform: translateX(4px);
+    mix-blend-mode: overlay;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.logo-text span:first-child {
+    color: #3b82f6;
+}
+
+.logo-text span:last-child {
+    color: #a855f7;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.toggle-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dark-mode .toggle-btn {
+    background-color: #1e293b;
+    color: white;
+}
+
+.light-mode .toggle-btn {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+.settings-container {
+    position: relative;
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: #1e293b;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    min-width: 200px;
+    display: none;
+}
+
+.dark-mode .settings-dropdown {
+    background-color: #1e293b;
+}
+
+.light-mode .settings-dropdown {
+    background-color: #e2e8f0;
+}
+
+.settings-dropdown.show {
+    display: block;
+}
+
+.settings-option {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dark-mode .settings-option:hover {
+    background-color: #2d3748;
+}
+
+.light-mode .settings-option:hover {
+    background-color: #cbd5e1;
+}
