@@ -104,7 +104,7 @@
     <div class="flex flex-col mt-4 gap-2">
         <label class="flex flex-row"><input id="showAssets" checked type="checkbox"class="checkbox !mr-1"/><div class="my-auto">Assets</div>
         </label>
-        <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1"/>Pipelines
+        <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1" onchange="filterByHealth()"/>Pipelines
         </label>
         <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1" onchange="filterByHealth()"/>Surf Vessels
         </label>
@@ -306,16 +306,21 @@
             filteredSurfVesselsData = [];
         }
 
+        let filteredPipelinesData = pipelinesData;
+        if (!document.getElementById('showPipelines').checked) {
+            filteredPipelinesData = [];
+        }
+
         // Re-render all health objects if health is unchecked
         if (!document.getElementById('showHealth').checked) {
             globe
-                .pathsData(pipelinesData)
+                .pathsData(filteredPipelinesData)
                 .pointsData(subseaAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
         } else {
             globe
-                .pathsData(filteredPipelines)
+                .pathsData(document.getElementById('showPipelines').checked ? filteredPipelines : [])
                 .pointsData(filteredAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
@@ -332,6 +337,7 @@
           filterByHealth();
         }
       });
+    document.getElementById('showPipelines').addEventListener('change', filterByHealth);
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
