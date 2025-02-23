@@ -9,6 +9,10 @@
     width: 100vw;
     height: 100vh;
    }
+   .sub-checkbox {
+    margin-left: 16px;
+    margin-bottom: 8px;
+   }
   </style>
   <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
@@ -86,8 +90,15 @@
     </div>
 
     <div class="flex flex-row !mt-2">
-        <label class="flex flex-row"><input id="showHealth" type="checkbox"class="checkbox !mr-1"/>Health
+        <label class="flex flex-row"><input id="showHealth" type="checkbox"class="checkbox !mr-1" onchange="toggleHealthOptions()"/>Health
         </label>
+   </div>
+   <div id="healthOptions" class="flex flex-col hidden">
+    <label style="padding-top: 0.5rem;" class="flex flex-row sub-checkbox"><input id="showHealthy" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Healthy</label>
+    <label class="flex flex-row sub-checkbox"><input id="showDegraded" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Degraded</label>
+    <label class="flex flex-row sub-checkbox"><input id="showCritical" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Critical</label>
+    <label class="flex flex-row sub-checkbox"><input id="showOffline" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Offline</label>
+    <label class="flex flex-row sub-checkbox"><input id="showUnknown" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Unknown</label>
    </div>
     <div class="flex flex-col">
         <label class="flex flex-row !mt-2">
@@ -174,7 +185,35 @@
     }
    });
 
+   document.addEventListener("DOMContentLoaded", function() {
+    const showHealth = document.getElementById('showHealth');
+    const healthOptions = document.getElementById('healthOptions');
+    const toggleView = document.querySelector("#toggleView");
+    const settings = document.getElementById("globeSettings");
 
+    if (showHealth.checked) {
+        healthOptions.classList.remove('hidden');
+    }
+
+    // Ensure the settings drawer is hidden initially
+    settings.classList.add('translate-x-full');
+
+    // Check the initial state of the toggleView checkbox
+    if (toggleView.checked) {
+        settings.classList.remove('translate-x-full');
+        settings.classList.add('translate-x-0');
+    }
+
+    toggleView.addEventListener("change", function () {
+        if (toggleView.checked) {
+            settings.classList.remove("translate-x-full");
+            settings.classList.add("translate-x-0");
+        } else {
+            settings.classList.remove("translate-x-0");
+            settings.classList.add("translate-x-full");
+        }
+    });
+   });
 
    // Function to toggle the 'disabled' state of the range input based on the showAnomalies checkbox
   function toggleRange() {
@@ -214,6 +253,26 @@
     // Adjust the number's position to be centered over the thumb
     rangeValue.style.left = `${offset}px`;
   }
+
+    function toggleHealthOptions() {
+        const showHealth = document.getElementById('showHealth');
+        const healthOptions = document.getElementById('healthOptions');
+        
+        if (showHealth.checked) {
+            healthOptions.classList.remove('hidden');
+        } else {
+            healthOptions.classList.add('hidden');
+        }
+    }
+
+    function ensureOneChecked(checkbox) {
+        const checkboxes = document.querySelectorAll('input[name="healthStatus"]');
+        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        
+        if (checkedCount === 0) {
+            checkbox.checked = true;
+        }
+    }
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
