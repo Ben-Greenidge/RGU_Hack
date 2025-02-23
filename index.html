@@ -266,6 +266,7 @@
     anomalyInput.addEventListener('input', function() {
         anomalyRange.value = anomalyInput.value;
         syncAnomalyInputs();
+        filterByAnomaly(); // Ensure rendering/unrendering of objects
     });
 
     // Enable or disable the range and number inputs based on the checkbox state
@@ -286,9 +287,9 @@
 
     // Add event listener to the checkbox to toggle the range and number inputs
     document.getElementById('showAnomalies').addEventListener('change', toggleRange);
-   });
+  });
 
-   // Function to toggle the 'disabled' state of the range input based on the showAnomalies checkbox
+  // Function to toggle the 'disabled' state of the range input based on the showAnomalies checkbox
   function toggleRange() {
     const showAnomalies = document.getElementById('showAnomalies');
     const anomalyRange = document.getElementById('anomalyRange');
@@ -383,8 +384,13 @@
           .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
           .onPointClick((d) => handlePointClick(d))
           .onPathClick((d) => handlePointClick(d));
+
+        // Apply anomaly filter if the checkbox is checked
+        if (document.getElementById('showAnomalies').checked) {
+            filterByAnomaly();
+        }
     }
-    
+
     document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
     document.getElementById('showHealth').addEventListener('change', filterByHealth);
     document.getElementById('showPointsOfInterest').addEventListener('change', filterByHealth);
@@ -447,6 +453,11 @@
 
     document.getElementById('anomalyRange').addEventListener('change', filterByAnomaly);
     document.getElementById('showAnomalies').addEventListener('change', filterByAnomaly);
+    anomalyInput.addEventListener('input', function() {
+        anomalyRange.value = anomalyInput.value;
+        syncAnomalyInputs();
+        filterByAnomaly(); // Ensure rendering/unrendering of objects
+    });
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
