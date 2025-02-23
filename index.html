@@ -83,7 +83,7 @@
         </label>
         <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1"/>Pipelines
         </label>
-        <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1"/>Surf Vessels
+        <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1" onchange="filterByHealth()"/>Surf Vessels
         </label>
         <label class="flex flex-row"><input id="showPointsOfInterest" checked type="checkbox" class="checkbox !mr-1"/>Points of Interest
         </label>
@@ -207,10 +207,10 @@
     toggleView.addEventListener("change", function () {
         if (toggleView.checked) {
             settings.classList.remove("translate-x-full");
-            settings.classList.add("translate-x-0");
+            settings.classList.add('translate-x-0');
         } else {
-            settings.classList.remove("translate-x-0");
-            settings.classList.add("translate-x-full");
+            settings.classList.remove('translate-x-0');
+            settings.classList.add('translate-x-full');
         }
     });
    });
@@ -285,18 +285,23 @@
         if (!document.getElementById('showPointsOfInterest').checked) {
             filteredPointsOfInterest = [];
         }
+
+        let filteredSurfVesselsData = filteredSurfVessels;
+        if (!document.getElementById('showSurfVessels').checked) {
+            filteredSurfVesselsData = [];
+        }
     
         // Re-render all health objects if health is unchecked
         if (!document.getElementById('showHealth').checked) {
             globe
                 .pathsData(pipelinesData)
-                .pointsData(subseaAssets.concat(surfVessels).concat(filteredPointsOfInterest))
+                .pointsData(subseaAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
         } else {
             globe
                 .pathsData(filteredPipelines)
-                .pointsData(filteredAssets.concat(filteredSurfVessels).concat(filteredPointsOfInterest))
+                .pointsData(filteredAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
         }
@@ -305,6 +310,13 @@
     document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
     document.getElementById('showHealth').addEventListener('change', filterByHealth);
     document.getElementById('showPointsOfInterest').addEventListener('change', filterByHealth);
+    document.getElementById('showSurfVessels').addEventListener('change', function() {
+        if (this.checked) {
+          loadSurfVessel().then(filterByHealth);
+        } else {
+          filterByHealth();
+        }
+      });
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
@@ -457,7 +469,7 @@
      .pointLat((d) => d.lat)
      .pointLng((d) => d.lng)
 
-     .pointRadius(0.05)
+     .pointRadius(0.05)  // Increased radius for easier selection
      .pointAltitude(() => 0)
 
      .labelColor(() => "#ff6600")
