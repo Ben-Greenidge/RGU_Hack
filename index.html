@@ -594,16 +594,16 @@
       .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
       .pointLat((d) => d.lat)
       .pointLng((d) => d.lng)
-      .pointRadius(0.05)
+      .pointRadius(0.3)
       .pointAltitude(() => 0)
       .labelColor(() => "#ff6600")
       .pointColor((d) => {
         if (d.type == "pointOfInterest") {
-          return "#0349fc";
+          return "rgba(245, 40, 145, 0)";
         } else if (d.type == "subseaAsset") {
-          return "#ffcc00";
+          return "rgba(245, 40, 145, 0)";
         } else if (d.type == "surfVessel") {
-          return "#fc3503";
+          return "rgba(245, 40, 145, 0)";
         }
       })
       .labelLabel(
@@ -714,6 +714,12 @@
             const el = document.createElement("div");
             el.innerHTML = markerSvg;  // Example: Pin marker
             el.style.fontSize = "48px";
+            el.style.zIndex = '99999';
+            el.addEventListener("click", function (e) {
+                console.log(this.className); // logs the className of my_element
+                console.log(e.currentTarget === this); // logs `true`
+                console.log("efsf",d)
+              });
             el.style.color = "red"; // Customize as needed
             return el;
         })
