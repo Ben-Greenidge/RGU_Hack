@@ -72,31 +72,36 @@
   <!-- Drawer -->
   <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-   <div class="drawer-content p-6">
+   <div class="drawer-content w-48">
     <h1>Filters</h1>
-    <div class="flex flex-row mt-4">
-     <label>
-      Assets
-      <input
-       id="showAssets"
-       checked="checked"
-       type="checkbox"
-       class="checkbox"
-      />
-     </label>
-     <label>
-      Pipelines
-      <input
-       id="showPipelines"
-       checked="checked"
-       type="checkbox"
-       class="checkbox"
-      />
-     </label>
+    <div class="flex flex-col mt-4">
+        <label>Assets<input id="showAssets" checked type="checkbox"class="checkbox"/>
+        </label>
+        <label>Pipelines<input id="showPipelines" checked type="checkbox" class="checkbox"/>
+        </label>
+        <label>Surf Vessels<input id="showSurfVessels" checked type="checkbox"class="checkbox"/>
+        </label>
+        <label>Points of Interest<input id="showPointsOfInterest" checked type="checkbox" class="checkbox"/>
+        </label>
     </div>
+
+    <div class="flex flex-row mt-4">
+        <label>Health<input id="showHealth" type="checkbox"class="checkbox"/>
+        </label>
    </div>
+    <div class="flex flex-col mt-4">
+        <label>Anomalies
+            <input id="showAnomalies" type="checkbox" class="checkbox" onchange="toggleRange()"/>
+            <input id="anomalyRange" type="range" min="0" max="100" value="40" class="range disabled:opacity-50 disabled:bg-gray-300" disabled/>
+            <!-- Number Display -->
+            <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500">40</span>
+        </label>
+        <div>
+
+        </div>
+    </div>
    <div></div>
-   <div class="drawer-side drawer-open">
+   <div class="drawer-side">
     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4"></ul>
    </div>
   </div>
@@ -164,6 +169,47 @@
      settings.classList.add("translate-x-full");
     }
    });
+
+
+
+   // Function to toggle the 'disabled' state of the range input based on the showAnomalies checkbox
+  function toggleRange() {
+    const showAnomalies = document.getElementById('showAnomalies');
+    const anomalyRange = document.getElementById('anomalyRange');
+    
+    // Enable or disable the range input based on the checkbox state
+    if (showAnomalies.checked) {
+      anomalyRange.removeAttribute('disabled');
+    } else {
+      anomalyRange.setAttribute('disabled', 'true');
+    }
+  }
+
+  // Update the number below the slider as the slider value changes
+  const anomalyRange = document.getElementById('anomalyRange');
+  const rangeValue = document.getElementById('anomalyValue');
+
+  updateNumberPosition()
+  
+  anomalyRange.addEventListener('input', function() {
+    rangeValue.textContent = anomalyRange.value; // Update the displayed value
+    updateNumberPosition();
+  });
+
+  // Function to update the position of the number below the slider thumb
+  function updateNumberPosition() {
+    const value = anomalyRange.value;
+    const min = anomalyRange.min;
+    const max = anomalyRange.max;
+    const rangeWidth = anomalyRange.offsetWidth;
+    
+    // Calculate the position of the thumb based on the slider value
+    const percentage = (value - min) / (max - min);
+    const offset = percentage * rangeWidth;
+    
+    // Adjust the number's position to be centered over the thumb
+    rangeValue.style.left = `${offset}px`;
+  }
 
    function loadSubseaPipelines() {
     return fetch("../data/subseaPipelines.json")
