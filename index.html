@@ -190,6 +190,9 @@
    let showVessels = true;
    let showAssets = true;
 
+   const markerSvg = `<svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#EA3323"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 400Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Z"/></svg>`;
+
+
    const globe = Globe()
     .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-dark.jpg")
     .bumpImageUrl(
@@ -203,7 +206,6 @@
 
    globe(document.getElementById("globeViz"));
 
-   const markerSvg = `<svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#EA3323"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 400Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Z"/></svg>`;
 
    const toggleView = document.querySelector("#toggleView");
    const settings = document.getElementById("globeSettings");
@@ -620,7 +622,24 @@
       .labelDotOrientation((d) =>
         labelsTopOrientation.has(d.label) ? "top" : "bottom"
       )
-      .onLabelClick((d) => window.open(d.url, "_blank"));
+      .onLabelClick((d) => window.open(d.url, "_blank"))
+      .htmlElementsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
+        .htmlElement(d => {
+            console.log('adding div');
+            const el = document.createElement("div");
+            el.innerHTML = markerSvg;  // Example: Pin marker
+            el.style.fontSize = "48px";
+            el.style.zIndex = '99999';
+            el.addEventListener("click", function (e) {
+                console.log(this.className); // logs the className of my_element
+                console.log(e.currentTarget === this); // logs `true`
+                console.log("efsf",d)
+              });
+            el.style.color = "red"; // Customize as needed
+            return el;
+        })
+        .onPointClick((d) => handlePointClick(d));
+      ;
   }
 
   function handlePointClick(point) {
@@ -708,22 +727,7 @@
 
     const combinedPointsData = subseaAssets.concat(surfVessels).concat(pointsOfInterestData);
     globe
-        .htmlElementsData(combinedPointsData)
-        .htmlElement(d => {
-            console.log('adding div');
-            const el = document.createElement("div");
-            el.innerHTML = markerSvg;  // Example: Pin marker
-            el.style.fontSize = "48px";
-            el.style.zIndex = '99999';
-            el.addEventListener("click", function (e) {
-                console.log(this.className); // logs the className of my_element
-                console.log(e.currentTarget === this); // logs `true`
-                console.log("efsf",d)
-              });
-            el.style.color = "red"; // Customize as needed
-            return el;
-        })
-        .onPointClick((d) => handlePointClick(d));
+        
     })
     .catch((error) => console.error("Error initializing globe:", error));
   </script>
