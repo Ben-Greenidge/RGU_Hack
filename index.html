@@ -311,11 +311,16 @@
             filteredPipelinesData = [];
         }
 
+        let filteredAssetsData = subseaAssets;
+        if (!document.getElementById('showAssets').checked) {
+            filteredAssetsData = [];
+        }
+
         // Re-render all health objects if health is unchecked
         if (!document.getElementById('showHealth').checked) {
             globe
                 .pathsData(filteredPipelinesData)
-                .pointsData(subseaAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
+                .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
         } else {
@@ -338,6 +343,13 @@
         }
       });
     document.getElementById('showPipelines').addEventListener('change', filterByHealth);
+    document.getElementById('showAssets').addEventListener('change', function() {
+        if (this.checked) {
+          loadSubseaAssets().then(filterByHealth);
+        } else {
+          filterByHealth();
+        }
+      });
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
