@@ -95,47 +95,73 @@
 
   <!-- Drawer -->
   <div id="globeSettings" class="drawer fixed left-0 z-50">
-   <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-   <div class="drawer-content w-48 !ml-2">
-    <h1 class="!mb-2">Filters</h1>
-    <div class="flex flex-col mt-4 gap-2">
-        <label class="flex flex-row"><input id="showAssets" checked type="checkbox"class="checkbox !mr-1"/><div class="my-auto">Assets</div>
-        </label>
-        <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1" onchange="filterByHealth()"/>Pipelines
-        </label>
-        <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1" onchange="filterByHealth()"/>Surf Vessels
-        </label>
-        <label class="flex flex-row"><input id="showPointsOfInterest" checked type="checkbox" class="checkbox !mr-1"/>Points of Interest
-        </label>
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content w-48 !ml-2">
+     <h1 class="!mb-2">Filters</h1>
+     <div class="flex flex-col mt-4 gap-2">
+         <label class="flex flex-row"><input id="showAssets" checked type="checkbox"class="checkbox !mr-1"/><div class="my-auto">Assets</div>
+         </label>
+         <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1" onchange="filterByHealth()"/>Pipelines
+         </label>
+         <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1" onchange="filterByHealth()"/>Surf Vessels
+         </label>
+         <label class="flex flex-row"><input id="showPointsOfInterest" checked type="checkbox" class="checkbox !mr-1"/>Points of Interest
+         </label>
+     </div>
+ 
+     <div class="flex flex-row !mt-2">
+         <label class="flex flex-row"><input id="showHealth" type="checkbox"class="checkbox !mr-1" onchange="toggleHealthOptions()"/>Health
+         </label>
     </div>
-
-    <div class="flex flex-row !mt-2">
-        <label class="flex flex-row"><input id="showHealth" type="checkbox"class="checkbox !mr-1" onchange="toggleHealthOptions()"/>Health
-        </label>
-   </div>
-   <div id="healthOptions" class="flex flex-col hidden">
-    <label style="padding-top: 0.5rem;" class="flex flex-row sub-checkbox"><input id="showHealthy" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Healthy</label>
-    <label class="flex flex-row sub-checkbox"><input id="showDegraded" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Degraded</label>
-    <label class="flex flex-row sub-checkbox"><input id="showCritical" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Critical</label>
-    <label class="flex flex-row sub-checkbox"><input id="showOffline" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Offline</label>
-    <label class="flex flex-row sub-checkbox"><input id="showUnknown" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Unknown</label>
-   </div>
-    <div class="flex flex-col">
-        <label class="flex flex-row !mt-2">
-            <input id="showAnomalies" type="checkbox" class="checkbox !mr-1" onchange="toggleRange()"/>Anomalies
-        </label>
-
-        <input id="anomalyRange" type="range" min="0" max="100" value="40" class="!mt-2 mr-2 range disabled:opacity-50 disabled:bg-gray-300" disabled/>
-        <!-- Hidden Number Display -->
-        <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500 hidden">40</span>
-        <!-- Input Box for Anomaly Value -->
-        <input id="anomalyInput" type="number" min="0" max="100" value="40" class="mt-2 p-1 border rounded" disabled/>
+    <div id="healthOptions" class="flex flex-col hidden">
+     <label style="padding-top: 0.5rem;" class="flex flex-row sub-checkbox"><input id="showHealthy" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Healthy</label>
+     <label class="flex flex-row sub-checkbox"><input id="showDegraded" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Degraded</label>
+     <label class="flex flex-row sub-checkbox"><input id="showCritical" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Critical</label>
+     <label class="flex flex-row sub-checkbox"><input id="showOffline" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Offline</label>
+     <label class="flex flex-row sub-checkbox"><input id="showUnknown" name="healthStatus" type="checkbox" class="checkbox !mr-1" onchange="ensureOneChecked(this)"/>Unknown</label>
     </div>
-   <div></div>
-   <div class="drawer-side">
-    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4"></ul>
+     <div class="flex flex-col">
+         <label class="flex flex-row !mt-2">
+             <input id="showAnomalies" type="checkbox" class="checkbox !mr-1" onchange="toggleRange()"/>Anomalies
+         </label>
+ 
+         <input id="anomalyRange" type="range" min="0" max="100" value="40" class="!mt-2 mr-2 range disabled:opacity-50 disabled:bg-gray-300" disabled/>
+         <!-- Hidden Number Display -->
+         <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500 hidden">40</span>
+         <!-- Input Box for Anomaly Value -->
+         <input id="anomalyInput" type="number" min="0" max="100" value="40" class="mt-2 p-1 border rounded" disabled/>
+     </div>
+    <div></div>
+    <div class="drawer-side">
+     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4"></ul>
+    </div>
    </div>
-  </div>
+   </div>
+
+  <br>
+
+  <!-- Drawer -->
+  <div id="legend" class="drawer fixed left-0 z-50">
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content w-48 !ml-2">
+     <h1 class="!mb-2 text-center">Legend</h1>
+     <div class="flex flex-col mt-4 gap-2">
+         <label class="flex flex-row text-[#ffcc00]">Assets .
+         </label>
+         <label class="flex flex-row text-[#ff0000]">Degraded Pipelines -
+         </label>
+         <label class="flex flex-row text-[#00ff00]">Healthy Pipelines -
+        </label>
+         <label class="flex flex-row text-[#fc3503]">Surf Vessels .
+         </label>
+         <label class="flex flex-row text-[#0349fc]">Points of Interest .
+         </label>
+     </div>
+    <div></div>
+    <div class="drawer-side">
+     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4"></ul>
+    </div>
+   </div>
 
   <!-- <button class="btn" onclick="my_modal_5.showModal()">open modal</button> -->
   <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
@@ -193,12 +219,15 @@
 
    const toggleView = document.querySelector("#toggleView");
    const settings = document.getElementById("globeSettings");
+   const legend = document.getElementById("legend");
 
    toggleView.addEventListener("change", function () {
     if (toggleView.checked) {
      settings.style.transform = "translateX(0)";
+     legend.style.transform = "translateX(0)";
     } else {
      settings.style.transform = "translateX(-100%)";
+     legend.style.transform = "translateX(0)";
     }
    });
 
@@ -214,20 +243,12 @@
 
     // Ensure the settings drawer is hidden initially
     settings.style.transform = "translateX(-100%)";
+    legend.style.transform = "translateX(-100%)";
 
     // Check the initial state of the toggleView checkbox
     if (toggleView.checked) {
         settings.style.transform = "translateX(0)";
     }
-
-    toggleView.addEventListener("change", function () {
-        if (toggleView.checked) {
-            settings.style.transform = "translateX(0)";
-        } else {
-            settings.style.transform = "translateX(-100%)";
-        }
-    });
-
     const anomalyRange = document.getElementById('anomalyRange');
     const anomalyInput = document.getElementById('anomalyInput');
 
