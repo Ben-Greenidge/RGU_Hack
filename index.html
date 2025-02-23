@@ -272,7 +272,30 @@
         if (checkedCount === 0) {
             checkbox.checked = true;
         }
+        filterByHealth();
     }
+
+    function filterByHealth() {
+        const healthStatuses = Array.from(document.querySelectorAll('input[name="healthStatus"]:checked')).map(cb => cb.id.replace('show', ''));
+        const filteredAssets = subseaAssets.filter(asset => healthStatuses.includes(asset.health));
+        const filteredPipelines = pipelinesData.filter(pipeline => healthStatuses.includes(pipeline.health));
+        const filteredSurfVessels = surfVessels.filter(vessel => healthStatuses.includes(vessel.health));
+    
+        let filteredPointsOfInterest = pointsOfInterestData;
+        if (!document.getElementById('showPointsOfInterest').checked) {
+            filteredPointsOfInterest = [];
+        }
+    
+        globe
+            .pathsData(filteredPipelines)
+            .pointsData(filteredAssets.concat(filteredSurfVessels).concat(filteredPointsOfInterest))
+            .onPointClick((d) => handlePointClick(d))
+            .onPathClick((d) => handlePointClick(d));
+    }
+    
+    document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
+    document.getElementById('showHealth').addEventListener('change', filterByHealth);
+    document.getElementById('showPointsOfInterest').addEventListener('change', filterByHealth);
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
