@@ -72,33 +72,31 @@
   <!-- Drawer -->
   <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-   <div class="drawer-content w-48">
-    <h1>Filters</h1>
-    <div class="flex flex-col mt-4">
-        <label>Assets<input id="showAssets" checked type="checkbox"class="checkbox"/>
+   <div class="drawer-content w-48 !ml-2">
+    <h1 class="!mb-2">Filters</h1>
+    <div class="flex flex-col mt-4 gap-2">
+        <label class="flex flex-row"><input id="showAssets" checked type="checkbox"class="checkbox !mr-1"/><div class="my-auto">Assets</div>
         </label>
-        <label>Pipelines<input id="showPipelines" checked type="checkbox" class="checkbox"/>
+        <label class="flex flex-row"><input id="showPipelines" checked type="checkbox" class="checkbox !mr-1"/>Pipelines
         </label>
-        <label>Surf Vessels<input id="showSurfVessels" checked type="checkbox"class="checkbox"/>
+        <label class="flex flex-row"><input id="showSurfVessels" checked type="checkbox"class="checkbox !mr-1"/>Surf Vessels
         </label>
-        <label>Points of Interest<input id="showPointsOfInterest" checked type="checkbox" class="checkbox"/>
+        <label class="flex flex-row"><input id="showPointsOfInterest" checked type="checkbox" class="checkbox !mr-1"/>Points of Interest
         </label>
     </div>
 
-    <div class="flex flex-row mt-4">
-        <label>Health<input id="showHealth" type="checkbox"class="checkbox"/>
+    <div class="flex flex-row !mt-2">
+        <label class="flex flex-row"><input id="showHealth" type="checkbox"class="checkbox !mr-1"/>Health
         </label>
    </div>
-    <div class="flex flex-col mt-4">
-        <label>Anomalies
-            <input id="showAnomalies" type="checkbox" class="checkbox" onchange="toggleRange()"/>
-            <input id="anomalyRange" type="range" min="0" max="100" value="40" class="range disabled:opacity-50 disabled:bg-gray-300" disabled/>
-            <!-- Number Display -->
-            <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500">40</span>
+    <div class="flex flex-col">
+        <label class="flex flex-row !mt-2">
+            <input id="showAnomalies" type="checkbox" class="checkbox !mr-1" onchange="toggleRange()"/>Anomalies
         </label>
-        <div>
 
-        </div>
+        <input id="anomalyRange" type="range" min="0" max="100" value="40" class="!mt-2 mr-2 range disabled:opacity-50 disabled:bg-gray-300" disabled/>
+        <!-- Number Display -->
+        <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500">40</span>
     </div>
    <div></div>
    <div class="drawer-side">
