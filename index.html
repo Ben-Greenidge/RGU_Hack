@@ -296,17 +296,17 @@
         const filteredAssets = subseaAssets.filter(asset => healthStatuses.includes(asset.health));
         const filteredPipelines = pipelinesData.filter(pipeline => healthStatuses.includes(pipeline.health));
         const filteredSurfVessels = surfVessels.filter(vessel => healthStatuses.includes(vessel.health));
-    
+        
         let filteredPointsOfInterest = pointsOfInterestData;
         if (!document.getElementById('showPointsOfInterest').checked) {
             filteredPointsOfInterest = [];
         }
 
-        let filteredSurfVesselsData = filteredSurfVessels;
+        let filteredSurfVesselsData = surfVessels;
         if (!document.getElementById('showSurfVessels').checked) {
             filteredSurfVesselsData = [];
         }
-    
+
         // Re-render all health objects if health is unchecked
         if (!document.getElementById('showHealth').checked) {
             globe
