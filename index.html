@@ -286,11 +286,20 @@
             filteredPointsOfInterest = [];
         }
     
-        globe
-            .pathsData(filteredPipelines)
-            .pointsData(filteredAssets.concat(filteredSurfVessels).concat(filteredPointsOfInterest))
-            .onPointClick((d) => handlePointClick(d))
-            .onPathClick((d) => handlePointClick(d));
+        // Re-render all health objects if health is unchecked
+        if (!document.getElementById('showHealth').checked) {
+            globe
+                .pathsData(pipelinesData)
+                .pointsData(subseaAssets.concat(surfVessels).concat(filteredPointsOfInterest))
+                .onPointClick((d) => handlePointClick(d))
+                .onPathClick((d) => handlePointClick(d));
+        } else {
+            globe
+                .pathsData(filteredPipelines)
+                .pointsData(filteredAssets.concat(filteredSurfVessels).concat(filteredPointsOfInterest))
+                .onPointClick((d) => handlePointClick(d))
+                .onPathClick((d) => handlePointClick(d));
+        }
     }
     
     document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
