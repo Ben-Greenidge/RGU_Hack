@@ -129,8 +129,10 @@
         </label>
 
         <input id="anomalyRange" type="range" min="0" max="100" value="40" class="!mt-2 mr-2 range disabled:opacity-50 disabled:bg-gray-300" disabled/>
-        <!-- Number Display -->
-        <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500">40</span>
+        <!-- Hidden Number Display -->
+        <span id="anomalyValue" class="absolute text-sm font-semibold transform -translate-x-1/2 bottom-[-20px] left-1/2 text-blue-500 hidden">40</span>
+        <!-- Input Box for Anomaly Value -->
+        <input id="anomalyInput" type="number" min="0" max="100" value="40" class="mt-2 p-1 border rounded" disabled/>
     </div>
    <div></div>
    <div class="drawer-side">
@@ -228,6 +230,44 @@
             settings.style.transform = "translateX(-100%)";
         }
     });
+
+    const anomalyRange = document.getElementById('anomalyRange');
+    const anomalyInput = document.getElementById('anomalyInput');
+
+    // Function to synchronize the range input and the number input
+    function syncAnomalyInputs() {
+        anomalyInput.value = anomalyRange.value;
+    }
+
+    // Update the number input as the slider value changes
+    anomalyRange.addEventListener('input', function() {
+        syncAnomalyInputs();
+    });
+
+    // Update the slider value as the number input changes
+    anomalyInput.addEventListener('input', function() {
+        anomalyRange.value = anomalyInput.value;
+        syncAnomalyInputs();
+    });
+
+    // Enable or disable the range and number inputs based on the checkbox state
+    function toggleRange() {
+        const showAnomalies = document.getElementById('showAnomalies');
+        if (showAnomalies.checked) {
+            anomalyRange.removeAttribute('disabled');
+            anomalyInput.removeAttribute('disabled');
+        } else {
+            anomalyRange.setAttribute('disabled', 'true');
+            anomalyInput.setAttribute('disabled', 'true');
+        }
+        filterByAnomaly();
+    }
+
+    // Initial call to set the correct state
+    toggleRange();
+
+    // Add event listener to the checkbox to toggle the range and number inputs
+    document.getElementById('showAnomalies').addEventListener('change', toggleRange);
    });
 
    // Function to toggle the 'disabled' state of the range input based on the showAnomalies checkbox
@@ -352,33 +392,43 @@
       });
 
     function filterByAnomaly() {
-        const filteredAssets = subseaAssets.filter(asset => asset.open_anomaly_count >= Number(rangeValue.textContent));
-        const filteredPipelines = pipelinesData.filter(pipeline => pipeline.open_anomaly_count >= Number(rangeValue.textContent));
-        console.log(filteredPipelines);
+        const anomalyThreshold = Number(document.getElementById('anomalyInput').value);
+        const filteredAssets = subseaAssets.filter(asset => asset.open_anomaly_count >= anomalyThreshold);
+        const filteredPipelines = pipelinesData.filter(pipeline => pipeline.open_anomaly_count >= anomalyThreshold);
+
+        let filteredPointsOfInterest = pointsOfInterestData;
+        if (!document.getElementById('showPointsOfInterest').checked) {
+            filteredPointsOfInterest = [];
+        }
+
+        let filteredSurfVesselsData = surfVessels;
+        if (!document.getElementById('showSurfVessels').checked) {
+            filteredSurfVesselsData = [];
+        }
+
+        let filteredPipelinesData = pipelinesData;
+        if (!document.getElementById('showPipelines').checked) {
+            filteredPipelinesData = [];
+        }
+
+        let filteredAssetsData = subseaAssets;
+        if (!document.getElementById('showAssets').checked) {
+            filteredAssetsData = [];
+        }
+
         // Re-render all objects if anomalies is unchecked
-        if (!document.getElementById('showAnomalies').checked ) {
-            if (document.getElementById('showAssets').checked) {
+        if (!document.getElementById('showAnomalies').checked) {
             globe
-                .pointsData(subseaAssets)
+                .pathsData(filteredPipelinesData)
+                .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
                 .onPointClick((d) => handlePointClick(d))
-            }
-            if (document.getElementById('showPipelines').checked) {
-            globe
-                .pathsData(pipelinesData)
                 .onPathClick((d) => handlePointClick(d));
-            }
-        
         } else {
-            if (document.getElementById('showAssets').checked) {
-            globe
-                .pointsData(filteredAssets)
-                .onPointClick((d) => handlePointClick(d))
-            }
-            if (document.getElementById('showPipelines').checked) {
             globe
                 .pathsData(filteredPipelines)
+                .pointsData(filteredAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
+                .onPointClick((d) => handlePointClick(d))
                 .onPathClick((d) => handlePointClick(d));
-            }
         }
     }
 
