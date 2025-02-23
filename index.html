@@ -375,11 +375,35 @@
 
         globe
           .pathsData(filteredPipelinesData)
-          .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
+          .htmlElementsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
+          .htmlElement(d => {
+            const el = document.createElement("div");
+            el.innerHTML = (() => {
+              switch(d.type) {
+                case 'subseaAsset':
+                  return assetsSvg;
+                case 'surfVessel':
+                  return surfVesselsSvg;
+                case 'pointOfInterest':
+                  return pointsOfInterestSvg;
+                default:
+                  return assetsSvg;
+              }
+            })();
+            el.style.fontSize = "48px";
+            el.style.zIndex = '99999';
+            el.addEventListener("click", function (e) {
+              console.log(this.className);
+              console.log(e.currentTarget === this);
+              console.log("Clicked:", d);
+            });
+            el.style.color = "red";
+            return el;
+          })
           .onPointClick((d) => handlePointClick(d))
           .onPathClick((d) => handlePointClick(d));
     }
-    
+
     document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
     document.getElementById('showHealth').addEventListener('change', filterByHealth);
     document.getElementById('showPointsOfInterest').addEventListener('change', filterByHealth);
