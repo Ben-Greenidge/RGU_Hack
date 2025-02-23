@@ -15,6 +15,7 @@
     --text-lg--line-height: calc(1.75 / 1.125);
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
@@ -197,6 +198,12 @@
   .bottom-\[-20px\] {
     bottom: -20px;
   }
+  .\!left-0 {
+    left: calc(var(--spacing) * 0) !important;
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
+  }
   .left-1 {
     left: calc(var(--spacing) * 1);
   }
@@ -205,6 +212,9 @@
   }
   .z-50 {
     z-index: 50;
+  }
+  .float-right {
+    float: right;
   }
   .container {
     width: 100%;
@@ -251,6 +261,9 @@
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
+  .mb-3 {
+    margin-bottom: calc(var(--spacing) * 3);
+  }
   .\!ml-2 {
     margin-left: calc(var(--spacing) * 2) !important;
   }
@@ -290,6 +303,9 @@
   .min-h-full {
     min-height: 100%;
   }
+  .\!w-min {
+    width: min-content !important;
+  }
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
@@ -307,6 +323,9 @@
   }
   .w-full {
     width: 100%;
+  }
+  .w-min {
+    width: min-content;
   }
   .border-collapse {
     border-collapse: collapse;
@@ -338,6 +357,9 @@
   }
   .resize {
     resize: both;
+  }
+  .\!flex-row {
+    flex-direction: row !important;
   }
   .flex-col {
     flex-direction: column;
@@ -375,6 +397,12 @@
   }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
+  }
+  .\!pb-6 {
+    padding-bottom: calc(var(--spacing) * 6) !important;
+  }
+  .pb-3 {
+    padding-bottom: calc(var(--spacing) * 3);
   }
   .\!pl-2 {
     padding-left: calc(var(--spacing) * 2) !important;
@@ -419,6 +447,10 @@
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .ease-in-out {
+    --tw-ease: var(--ease-in-out);
+    transition-timing-function: var(--ease-in-out);
   }
   .disabled\:bg-gray-300 {
     &:disabled {
@@ -573,6 +605,10 @@
   inherits: false;
 }
 @property --tw-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ease {
   syntax: "*";
   inherits: false;
 }
