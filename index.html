@@ -38,16 +38,13 @@
     top: 10px; /* Lower down */
    }
   </style>
-  <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
   <link
    href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
    rel="stylesheet"
    type="text/css"
   />
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="style.css" />
-  <!-- <script src="script.js"></script> -->
   <script src="script.js"></script>
   <link rel="stylesheet" href="output.css" />
  </head>
@@ -363,25 +360,20 @@
             filteredPipelinesData = [];
         }
 
-        let filteredAssetsData = subseaAssets;
-        if (!document.getElementById('showAssets').checked) {
-            filteredAssetsData = [];
+        let filteredAssetsData = [];
+        if (document.getElementById('showAssets').checked) {
+            if (document.getElementById('showHealth').checked) {
+                filteredAssetsData = filteredAssets;
+            } else {
+                filteredAssetsData = subseaAssets;
+            }
         }
 
-        // Re-render all health objects if health is unchecked
-        if (!document.getElementById('showHealth').checked) {
-            globe
-                .pathsData(filteredPipelinesData)
-                .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
-                .onPointClick((d) => handlePointClick(d))
-                .onPathClick((d) => handlePointClick(d));
-        } else {
-            globe
-                .pathsData(document.getElementById('showPipelines').checked ? filteredPipelines : [])
-                .pointsData(filteredAssets.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
-                .onPointClick((d) => handlePointClick(d))
-                .onPathClick((d) => handlePointClick(d));
-        }
+        globe
+          .pathsData(filteredPipelinesData)
+          .pointsData(filteredAssetsData.concat(filteredSurfVesselsData).concat(filteredPointsOfInterest))
+          .onPointClick((d) => handlePointClick(d))
+          .onPathClick((d) => handlePointClick(d));
     }
     
     document.querySelectorAll('input[name="healthStatus"]').forEach(cb => cb.addEventListener('change', filterByHealth));
@@ -449,268 +441,270 @@
 
    function loadSubseaPipelines() {
     if (!showPipelines) {
-        return([]);
+      return Promise.resolve([]);
     }
-    
-    return fetch("../data/subseaPipelines.json")
-     .then((response) => {
-      if (!response.ok) {
-       throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-     })
-     .then((data) => {
-      pipelinesData = data.map((pipeline) => ({
-       coords: [
-        [
-         pipeline.start_coordinates.coordinates.longitude,
-         pipeline.start_coordinates.coordinates.latitude,
-        ],
-        [
-         pipeline.end_coordinates.coordinates.longitude,
-         pipeline.end_coordinates.coordinates.latitude,
-        ],
-       ],
-       properties: {
-        name: pipeline.name,
-        color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00",
-       },
-       type: "pipeline",
-       health: pipeline.health,
-       pressure: pipeline.pressure,
-       temperature: pipeline.temperature,
-       flow_rate: pipeline.flow_rate,
-       last_inspection: pipeline.last_inspection,
-       next_maintenance: pipeline.next_maintenance,
-       alerts: pipeline.alerts,
-       open_anomaly_count: pipeline.open_anomaly_count,
-      }));
-     })
-     .catch((error) => console.error("Error loading pipeline data:", error));
-   }
 
-   function loadSurfVessel() {
+    return fetch("../data/subseaPipelines.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        pipelinesData = data.map((pipeline) => ({
+          coords: [
+            [
+              pipeline.start_coordinates.coordinates.longitude,
+              pipeline.start_coordinates.coordinates.latitude,
+            ],
+            [
+              pipeline.end_coordinates.coordinates.longitude,
+              pipeline.end_coordinates.coordinates.latitude,
+            ],
+          ],
+          properties: {
+            name: pipeline.name,
+            color: pipeline.health === "Degraded" ? "#ff0000" : "#00ff00",
+          },
+          type: "pipeline",
+          health: pipeline.health,
+          pressure: pipeline.pressure,
+          temperature: pipeline.temperature,
+          flow_rate: pipeline.flow_rate,
+          last_inspection: pipeline.last_inspection,
+          next_maintenance: pipeline.next_maintenance,
+          alerts: pipeline.alerts,
+          open_anomaly_count: pipeline.open_anomaly_count,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error loading pipeline data:", error);
+        return [];
+      });
+  }
+
+  function loadSurfVessel() {
     if (!showVessels) {
-        return([]);
+      return Promise.resolve([]);
     }
 
     return fetch("../data/surfVessels.json")
-     .then((response) => {
-      if (!response.ok) {
-       throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      //console.log("Vessel data:",response.json())
-      return response.json();
-     })
-     .then((data) => {
-      surfVessels = data.map((point) => ({
-       lat: point.coordinates.latitude,
-       lng: point.coordinates.longitude,
-       name: point.name,
-       type: "surfVessel",
-       vessel_type: point.vessel_type,
-       heading: point.heading,
-       speed: point.speed,
-       destination: point.destination,
-       status: point.status,
-       crew_count: point.crew_count,
-       fuel_level: point.fuel_level,
-      }));
-     })
-     .catch((error) =>
-      console.error("Error loading points of interest data:", error)
-     );
-   }
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        surfVessels = data.map((point) => ({
+          lat: point.coordinates.latitude,
+          lng: point.coordinates.longitude,
+          name: point.name,
+          type: "surfVessel",
+          vessel_type: point.vessel_type,
+          heading: point.heading,
+          speed: point.speed,
+          destination: point.destination,
+          status: point.status,
+          crew_count: point.crew_count,
+          fuel_level: point.fuel_level,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error loading surf vessel data:", error);
+        return [];
+      });
+  }
 
-   function loadSubseaAssets() {
+  function loadSubseaAssets() {
     if (!showAssets) {
-        return([]);
+      return Promise.resolve([]);
     }
 
     return fetch("../data/subseaAssets.json")
-     .then((response) => {
-      if (!response.ok) {
-       throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-     })
-     .then((data) => {
-      subseaAssets = data.map((point) => ({
-       lat: point.coordinates.coordinates.latitude,
-       lng: point.coordinates.coordinates.longitude,
-       name: point.name,
-       type: "subseaAsset",
-       health: point.health,
-       depth: point.coordinates.depth,
-       pressure: point.pressure,
-       temperature: point.temperature,
-       flow_rate: point.flow_rate,
-       alerts: point.alerts,
-       connected_assets: point.connected_assets,
-       open_anomaly_count: point.open_anomaly_count,
-       workpacks_at_site_count: point.workpacks_at_site_count,
-      }));
-     })
-     .catch((error) =>
-      console.error("Error loading points of interest data:", error)
-     );
-   }
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        subseaAssets = data.map((point) => ({
+          lat: point.coordinates.coordinates.latitude,
+          lng: point.coordinates.coordinates.longitude,
+          name: point.name,
+          type: "subseaAsset",
+          health: point.health,
+          depth: point.coordinates.depth,
+          pressure: point.pressure,
+          temperature: point.temperature,
+          flow_rate: point.flow_rate,
+          alerts: point.alerts,
+          connected_assets: point.connected_assets,
+          open_anomaly_count: point.open_anomaly_count,
+          workpacks_at_site_count: point.workpacks_at_site_count,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error loading subsea assets data:", error);
+        return [];
+      });
+  }
 
-   function loadPointsOfInterest() {
+  function loadPointsOfInterest() {
     if (!showPointsOfInterest) {
-        return([]);
+      return Promise.resolve([]);
     }
 
     return fetch("../data/pointsOfInterest.json")
-     .then((response) => {
-      if (!response.ok) {
-       throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-     })
-     .then((data) => {
-      pointsOfInterestData = data.map((point) => ({
-       lat: point.coordinates.latitude,
-       lng: point.coordinates.longitude,
-       name: point.name,
-       description: point.description,
-       type: "pointOfInterest",
-      }));
-     })
-     .catch((error) =>
-      console.error("Error loading points of interest data:", error)
-     );
-   }
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        pointsOfInterestData = data.map((point) => ({
+          lat: point.coordinates.latitude,
+          lng: point.coordinates.longitude,
+          name: point.name,
+          description: point.description,
+          type: "pointOfInterest",
+        }));
+      })
+      .catch((error) => {
+        console.error("Error loading points of interest data:", error);
+        return [];
+      });
+  }
 
-   function initializeGlobe() {
+  function initializeGlobe() {
     console.log(pointsOfInterestData.concat(subseaAssets).concat(surfVessels));
     globe
-     .pathsData(pipelinesData)
-     .pathPoints("coords")
-     .pathPointLat((p) => p[1])
-     .pathPointLng((p) => p[0])
-     .pathColor((path) => path.properties.color)
-     .pathLabel((path) => path.properties.name)
-     .pathDashLength(0.1)
-     .pathDashGap(0.008)
-     .pathDashAnimateTime(12000)
-     .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
-     .pointLat((d) => d.lat)
-     .pointLng((d) => d.lng)
+      .pathsData(pipelinesData)
+      .pathPoints("coords")
+      .pathPointLat((p) => p[1])
+      .pathPointLng((p) => p[0])
+      .pathColor((path) => path.properties.color)
+      .pathLabel((path) => path.properties.name)
+      .pathDashLength(0.1)
+      .pathDashGap(0.008)
+      .pathDashAnimateTime(12000)
+      .pointsData(pointsOfInterestData.concat(subseaAssets).concat(surfVessels))
+      .pointLat((d) => d.lat)
+      .pointLng((d) => d.lng)
+      .pointRadius(0.05)
+      .pointAltitude(() => 0)
+      .labelColor(() => "#ff6600")
+      .pointColor((d) => {
+        if (d.type == "pointOfInterest") {
+          return "#0349fc";
+        } else if (d.type == "subseaAsset") {
+          return "#ffcc00";
+        } else if (d.type == "surfVessel") {
+          return "#fc3503";
+        }
+      })
+      .labelLabel(
+        (d) => `
+          <div><b>${d.name}</b></div>
+          <div>${d.description}</div>
+        `
+      )
+      .onPointClick((d) => handlePointClick(d))
+      .onPathClick((d) => handlePointClick(d))
+      .labelText("label")
+      .labelSize(1.7)
+      .labelDotRadius(0.4)
+      .labelDotOrientation((d) =>
+        labelsTopOrientation.has(d.label) ? "top" : "bottom"
+      )
+      .onLabelClick((d) => window.open(d.url, "_blank"));
+  }
 
-     .pointRadius(0.05)  // Increased radius for easier selection
-     .pointAltitude(() => 0)
-     .labelColor(() => "#ff6600")
-     .pointColor((d) => {
-      if (d.type == "pointOfInterest") {
-       return "#0349fc";
-      } else if (d.type == "subseaAsset") {
-       return "#ffcc00";
-      } else if (d.type == "surfVessel") {
-       return "#fc3503";
-      }
-     })
-     .labelLabel(
-      (d) => `
-                    <div><b>${d.name}</b></div>
-                    <div>${d.description}</div>
-                `
-     )
-     .onPointClick((d) => handlePointClick(d))
-     .onPathClick((d) => handlePointClick(d))
-     .labelText("label")
-     .labelSize(1.7)
-     .labelDotRadius(0.4)
-     .labelDotOrientation((d) =>
-      labelsTopOrientation.has(d.label) ? "top" : "bottom"
-     )
-
-     .onLabelClick((d) => window.open(d.url, "_blank"));
-   }
-
-   function handlePointClick(point) {
+  function handlePointClick(point) {
     console.log("Point clicked:", point.type);
     //alert(`You clicked on: ${point.name}\nDescription: ${point.description}`);
 
     switch (point.type) {
-     case "subseaAsset":
-      document.getElementById(
-       "popup-title"
-      ).textContent = `${point.name} (Subsea Asset)`;
-      console.log("Clicked a subsea asset");
-      document.getElementById("popup-body").innerHTML = `
-                    <div>Latitude: ${point.lat}</div>
-                    <div>Longitude: ${point.lng}</div>
-                    <div>Health: ${point.health}</div>
-                    <div>Depth: ${point.depth}</div>
-                    <div>Pressure: ${point.pressure}</div>
-                    <div>Temperature: ${point.temperature}</div>
-                    <div>Flow Rate: ${point.flow_rate}</div>
-                    <div>Alerts: ${point.alerts}</div>
-                    <div>Connected Assets: ${point.connected_assets}</div>
-                    <div>Open Anomaly Count: ${point.open_anomaly_count}</div>
-                    <div>Workpacks on Site: ${point.workpacks_at_site_count}</div>
-                    `;
-      break;
-     case "pointOfInterest":
-      document.getElementById("popup-title").textContent = `${point.name} (Point of Interest)`;
-      document.getElementById("popup-body").innerHTML = `
-      <div>Description: ${point.description}</div>
-      `;
-      console.log("Clicked a pointOfInterest");
-      break;
-     case "surfVessel":
-      document.getElementById(
-       "popup-title"
-      ).textContent = `${point.name} (Surf Vessel)`;
-      document.getElementById("popup-body").innerHTML = `
-                    <div>Vessel Type: ${point.vessel_type}</div>
-                    <div>Heading: ${point.heading}</div>
-                    <div>Speed: ${point.speed}</div>
-                    <div>Destination: ${point.destination}</div>
-                    <div>Status: ${point.status}</div>
-                    <div>Crew Count: ${point.crew_count}</div>
-                    <div>Fuel Level: ${point.fuel_level}</div>
-                    `;
-      console.log("Clicked a surfVessel");
-      break;
-     case "pipeline":
-      document.getElementById(
-       "popup-title"
-      ).textContent = `${point.properties.name} (Pipeline)`;
-      console.log("Clicked a pipeline");
-      document.getElementById("popup-body").innerHTML = `
-                    <div>Health: ${point.health}</div>
-                    <div>Temperature: ${point.temperature}°C</div>
-                    <div>Pressure: ${point.pressure}</div>
-                    <div>Flow Rate: ${point.flow_rate}</div>
-                    <div>Last Inspection: ${point.last_inspection}</div>
-                    <div>Next Maintenance: ${point.next_maintenance}</div>
-                    <div>Alerts: ${point.alerts}</div>
-                    <div>Open Anomalies: ${point.open_anomaly_count}</div>
-                    `;
-      break;
-     default:
-      break;
+      case "subseaAsset":
+        document.getElementById(
+          "popup-title"
+        ).textContent = `${point.name} (Subsea Asset)`;
+        console.log("Clicked a subsea asset");
+        document.getElementById("popup-body").innerHTML = `
+          <div>Latitude: ${point.lat}</div>
+          <div>Longitude: ${point.lng}</div>
+          <div>Health: ${point.health}</div>
+          <div>Depth: ${point.depth}</div>
+          <div>Pressure: ${point.pressure}</div>
+          <div>Temperature: ${point.temperature}</div>
+          <div>Flow Rate: ${point.flow_rate}</div>
+          <div>Alerts: ${point.alerts}</div>
+          <div>Connected Assets: ${point.connected_assets}</div>
+          <div>Open Anomaly Count: ${point.open_anomaly_count}</div>
+          <div>Workpacks on Site: ${point.workpacks_at_site_count}</div>
+        `;
+        break;
+      case "pointOfInterest":
+        document.getElementById("popup-title").textContent = `${point.name} (Point of Interest)`;
+        document.getElementById("popup-body").innerHTML = `
+          <div>Description: ${point.description}</div>
+        `;
+        console.log("Clicked a pointOfInterest");
+        break;
+      case "surfVessel":
+        document.getElementById(
+          "popup-title"
+        ).textContent = `${point.name} (Surf Vessel)`;
+        document.getElementById("popup-body").innerHTML = `
+          <div>Vessel Type: ${point.vessel_type}</div>
+          <div>Heading: ${point.heading}</div>
+          <div>Speed: ${point.speed}</div>
+          <div>Destination: ${point.destination}</div>
+          <div>Status: ${point.status}</div>
+          <div>Crew Count: ${point.crew_count}</div>
+          <div>Fuel Level: ${point.fuel_level}</div>
+        `;
+        console.log("Clicked a surfVessel");
+        break;
+      case "pipeline":
+        document.getElementById(
+          "popup-title"
+        ).textContent = `${point.properties.name} (Pipeline)`;
+        console.log("Clicked a pipeline");
+        document.getElementById("popup-body").innerHTML = `
+          <div>Health: ${point.health}</div>
+          <div>Temperature: ${point.temperature}°C</div>
+          <div>Pressure: ${point.pressure}</div>
+          <div>Flow Rate: ${point.flow_rate}</div>
+          <div>Last Inspection: ${point.last_inspection}</div>
+          <div>Next Maintenance: ${point.next_maintenance}</div>
+          <div>Alerts: ${point.alerts}</div>
+          <div>Open Anomalies: ${point.open_anomaly_count}</div>
+        `;
+        break;
+      default:
+        break;
     }
 
     my_modal_5.showModal();
-   }
+  }
 
-   Promise.all([
+  Promise.all([
     loadSubseaPipelines(),
     loadPointsOfInterest(),
     loadSubseaAssets(),
     loadSurfVessel(),
-   ])
+  ])
     .then(() => initializeGlobe())
-    //.then(() => globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.3 }, 1000));
     .then(() => {
-     globe.pointOfView({ lat: 0, lng: -30, altitude: 3.0 }, 0);
+      globe.pointOfView({ lat: 0, lng: -30, altitude: 3.0 }, 0);
 
-     setTimeout(() => {
-      globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
-     }, 1000);
+      setTimeout(() => {
+        globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
+      }, 1000);
 
     const combinedPointsData = subseaAssets.concat(surfVessels).concat(pointsOfInterestData);
     globe
@@ -724,7 +718,8 @@
             return el;
         })
         .onPointClick((d) => handlePointClick(d));
-    });
+    })
+    .catch((error) => console.error("Error initializing globe:", error));
   </script>
  </body>
 </html>
