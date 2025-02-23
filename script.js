@@ -1,21 +1,21 @@
-console.log("This loaded")
+console.log("This loaded");
 
-      function togglePanelVisibility() {
-        //console.log("function reached")
-          var globeSettings = document.getElementById('globeSettings');
-          console.log(globeSettings);
-          var visibleButton = document.getElementById('visible');
-          var hiddenButton = document.getElementById('hidden');
+function togglePanelVisibility() {
+  var globeSettings = document.getElementById('globeSettings');
+  var visibleButton = document.getElementById('visible');
+  var hiddenButton = document.getElementById('hidden');
 
-          if (globeSettings.className == "none") {
-              globeSettings.className == "block";
-              visibleButton.className == "block";
-              hiddenButton.className == "hidden";
-              console.log('showing settings')
-          } else { //hide
-              globeSettings.className == "hidden";
-              visibleButton.className == "hidden";
-              hiddenButton.className == "block";
-              console.log('hiding settings')
-          }
-      }
+  if (globeSettings.classList.contains("hidden")) {
+    globeSettings.classList.remove("hidden");
+    globeSettings.classList.add("block");
+    visibleButton.classList.add("hidden");
+    hiddenButton.classList.remove("hidden");
+    console.log('showing settings');
+  } else {
+    globeSettings.classList.remove("block");
+    globeSettings.classList.add("hidden");
+    visibleButton.classList.remove("hidden");
+    hiddenButton.classList.add("hidden");
+    console.log('hiding settings');
+  }
+}
