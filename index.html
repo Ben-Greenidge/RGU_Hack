@@ -9,6 +9,28 @@
     width: 100vw;
     height: 100vh;
    }
+   .login-container,
+   .register-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    z-index: 1000;
+   }
+   .saved-elements {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+   }
   </style>
   <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
@@ -19,9 +41,12 @@
   />
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="style.css" />
-  <!-- <script src="script.js"></script> -->
+  <script src="script.js"></script>
   <script src="script.js"></script>
   <link rel="stylesheet" href="output.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script type="module" src="script.js"></script>
  </head>
  <body class="overflow-x-hidden" data-theme="night">
   <div id="globeViz" class="fixed"></div>
@@ -116,6 +141,38 @@
     </div>
    </div>
   </dialog>
+
+  <button id="showLoginBtn" class="fixed top-4 right-4">Login</button>
+
+  <div class="login-container" id="loginContainer">
+   <form id="loginForm">
+    <input
+     type="text"
+     id="username"
+     name="username"
+     placeholder="Username"
+     required
+    />
+    <input type="password" name="password" placeholder="Password" required />
+    <button type="submit">Login</button>
+    <button type="button" id="showRegisterBtn">Register</button>
+    <button type="button" id="closeLoginBtn">Close</button>
+   </form>
+  </div>
+
+  <div class="register-container" id="registerContainer">
+   <form id="registerForm">
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <button type="submit">Register</button>
+    <button type="button" id="closeRegisterBtn">Close</button>
+   </form>
+  </div>
+
+  <div class="saved-elements">
+   <h2>Saved Elements</h2>
+   <ul id="savedElementsList"></ul>
+  </div>
 
   <script>
    let pipelinesData = [];
@@ -393,6 +450,17 @@
     my_modal_5.showModal();
    }
 
+   function displaySavedElements(username) {
+    const savedElements = getSavedElements(username);
+    const list = document.getElementById("savedElementsList");
+    list.innerHTML = "";
+    savedElements.forEach((element) => {
+     const listItem = document.createElement("li");
+     listItem.textContent = element.name;
+     list.appendChild(listItem);
+    });
+   }
+
    Promise.all([
     loadSubseaPipelines(),
     loadPointsOfInterest(),
@@ -408,6 +476,115 @@
       globe.pointOfView({ lat: 54.0, lng: -2.0, altitude: 0.5 }, 3000);
      }, 1000);
     });
+
+   document.getElementById("showLoginBtn").addEventListener("click", () => {
+    document.getElementById("loginContainer").style.display = "block";
+   });
+
+   document.getElementById("closeLoginBtn").addEventListener("click", () => {
+    document.getElementById("loginContainer").style.display = "none";
+   });
+
+   document.getElementById("showRegisterBtn").addEventListener("click", () => {
+    document.getElementById("loginContainer").style.display = "none";
+    document.getElementById("registerContainer").style.display = "block";
+   });
+
+   document
+    .getElementById("registerForm")
+    .addEventListener("submit", (event) => {
+     event.preventDefault();
+     const username = event.target.username.value;
+     const password = event.target.password.value;
+     try {
+      createUser(username, password);
+      alert("Registration successful");
+      document.getElementById("registerContainer").style.display = "none";
+      document.getElementById("loginContainer").style.display = "block";
+     } catch (error) {
+      alert(error.message);
+     }
+    });
+
+   document.getElementById("loginForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    try {
+     loginUser(username, password);
+     alert("Login successful");
+     document.getElementById("loginContainer").style.display = "none";
+    } catch (error) {
+     alert(error.message);
+    }
+   });
+
+   document.getElementById("closeRegisterBtn").addEventListener("click", () => {
+    document.getElementById("registerContainer").style.display = "none";
+    document.getElementById("loginContainer").style.display = "block";
+   });
+
+   document
+    .getElementById("toggleView")
+    .addEventListener("change", function () {
+     const settings = document.getElementById("globeSettings");
+     if (this.checked) {
+      settings.classList.remove("translate-x-full");
+      settings.classList.add("translate-x-0");
+     } else {
+      settings.classList.remove("translate-x-0");
+      settings.classList.add("translate-x-full");
+     }
+    });
+
+   function handlePointClick(point) {
+    const username = document.getElementById("username").value;
+    saveElement(username, point);
+    alert("Element saved");
+   }
+  </script>
+  <script type="module">
+   import {
+    createUser,
+    loginUser,
+    saveElement,
+    getSavedElements,
+   } from "./userAccounts.js";
+
+   document.getElementById("loginForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    try {
+     loginUser(username, password);
+     alert("Login successful");
+     document.getElementById("loginContainer").style.display = "none";
+    } catch (error) {
+     alert(error.message);
+    }
+   });
+
+   document
+    .getElementById("registerForm")
+    .addEventListener("submit", (event) => {
+     event.preventDefault();
+     const username = event.target.username.value;
+     const password = event.target.password.value;
+     try {
+      createUser(username, password);
+      alert("Registration successful");
+      document.getElementById("registerContainer").style.display = "none";
+      document.getElementById("loginContainer").style.display = "block";
+     } catch (error) {
+      alert(error.message);
+     }
+    });
+
+   function handlePointClick(point) {
+    const username = document.getElementById("username").value;
+    saveElement(username, point);
+    alert("Element saved");
+   }
   </script>
  </body>
 </html>
