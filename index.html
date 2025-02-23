@@ -352,8 +352,8 @@
       });
 
     function filterByAnomaly() {
-        const filteredAssets = subseaAssets.filter(asset => !asset.open_anomaly_count || asset.open_anomaly_count >= Number(rangeValue.textContent));
-        const filteredPipelines = pipelinesData.filter(pipeline => !pipeline.open_anomaly_count || pipeline.open_anomaly_count >= Number(rangeValue.textContent));
+        const filteredAssets = subseaAssets.filter(asset => asset.open_anomaly_count >= Number(rangeValue.textContent));
+        const filteredPipelines = pipelinesData.filter(pipeline => pipeline.open_anomaly_count >= Number(rangeValue.textContent));
         console.log(filteredPipelines);
         // Re-render all objects if anomalies is unchecked
         if (!document.getElementById('showAnomalies').checked ) {
@@ -594,7 +594,6 @@
      case "pointOfInterest":
       document.getElementById("popup-title").textContent = `${point.name} (Point of Interest)`;
       document.getElementById("popup-body").innerHTML = `
-      <br>
       <div>Description: ${point.description}</div>
       `;
       console.log("Clicked a pointOfInterest");
@@ -624,6 +623,10 @@
                     <div>Temperature: ${point.temperature}°C</div>
                     <div>Pressure: ${point.pressure}</div>
                     <div>Flow Rate: ${point.flow_rate}</div>
+                    <div>Last Inspection: ${point.last_inspection}</div>
+                    <div>Next Maintenance: ${point.next_maintenance}</div>
+                    <div>Alerts: ${point.alerts}</div>
+                    <div>Open Anomalies: ${point.open_anomaly_count}</div>
                     `;
       break;
      default:
