@@ -356,19 +356,29 @@
         const filteredPipelines = pipelinesData.filter(pipeline => !pipeline.open_anomaly_count || pipeline.open_anomaly_count >= Number(rangeValue.textContent));
         console.log(filteredPipelines);
         // Re-render all objects if anomalies is unchecked
-        if (!document.getElementById('showAnomalies').checked) {
+        if (!document.getElementById('showAnomalies').checked ) {
+            if (document.getElementById('showAssets').checked) {
             globe
-                .pathsData(pipelinesData)
                 .pointsData(subseaAssets)
                 .onPointClick((d) => handlePointClick(d))
-                .onPathClick((d) => handlePointClick(d));
-        } else {
-            console.log(rangeValue.textContent);
+            }
+            if (document.getElementById('showPipelines').checked) {
             globe
-                .pathsData(filteredPipelines)
+                .pathsData(pipelinesData)
+                .onPathClick((d) => handlePointClick(d));
+            }
+        
+        } else {
+            if (document.getElementById('showAssets').checked) {
+            globe
                 .pointsData(filteredAssets)
                 .onPointClick((d) => handlePointClick(d))
+            }
+            if (document.getElementById('showPipelines').checked) {
+            globe
+                .pathsData(filteredPipelines)
                 .onPathClick((d) => handlePointClick(d));
+            }
         }
     }
 
