@@ -351,6 +351,30 @@
         }
       });
 
+    function filterByAnomaly() {
+        const filteredAssets = subseaAssets.filter(asset => !asset.open_anomaly_count || asset.open_anomaly_count >= Number(rangeValue.textContent));
+        const filteredPipelines = pipelinesData.filter(pipeline => !pipeline.open_anomaly_count || pipeline.open_anomaly_count >= Number(rangeValue.textContent));
+        console.log(filteredPipelines);
+        // Re-render all objects if anomalies is unchecked
+        if (!document.getElementById('showAnomalies').checked) {
+            globe
+                .pathsData(pipelinesData)
+                .pointsData(subseaAssets)
+                .onPointClick((d) => handlePointClick(d))
+                .onPathClick((d) => handlePointClick(d));
+        } else {
+            console.log(rangeValue.textContent);
+            globe
+                .pathsData(filteredPipelines)
+                .pointsData(filteredAssets)
+                .onPointClick((d) => handlePointClick(d))
+                .onPathClick((d) => handlePointClick(d));
+        }
+    }
+
+    document.getElementById('anomalyRange').addEventListener('change', filterByAnomaly);
+    document.getElementById('showAnomalies').addEventListener('change', filterByAnomaly);
+
    function loadSubseaPipelines() {
     if (!showPipelines) {
         return([]);
