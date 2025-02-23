@@ -13,6 +13,30 @@
     margin-left: 16px;
     margin-bottom: 8px;
    }
+   .controls {
+    position: absolute;
+    top: 55px; /* Adjusted to move the toggle further down */
+    left: 25px;
+   }
+   .drawer {
+    width: 150px; /* Adjusted width to make it narrower */
+    transition: transform 0.3s ease-in-out;
+   }
+   .drawer-content {
+    padding: 10px;
+   }
+   .checkbox {
+    width: 20px; /* Adjusted width of checkboxes */
+    height: 20px; /* Adjusted height of checkboxes */
+   }
+   #globeSettings {
+    width: auto; /* Adjusted to not take up the entire horizontal area */
+    max-width: 200px; /* Set a maximum width */
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    z-index: 10; /* Ensure it is behind other elements like the globe */
+    transform: translateX(-100%); /* Initially hidden */
+    top: 10px; /* Lower down */
+   }
   </style>
   <script src="https://unpkg.com/three@0.173.0/build/three.min.js"></script>
   <script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
@@ -40,7 +64,7 @@
     </div>
     <div class="logo-text"><span>e</span><span>lementz</span></div>
    </div>
-   <div class="controls flex justify-end">
+   <div class="controls flex flex-col">
     <label class="swap">
      <!-- this hidden checkbox controls the state -->
      <input id="toggleView" type="checkbox"/>
@@ -74,7 +98,7 @@
   </div>
 
   <!-- Drawer -->
-  <div id="globeSettings" class="drawer fixed top-0 right-0 z-50">
+  <div id="globeSettings" class="drawer fixed left-0 z-50">
    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
    <div class="drawer-content w-48 !ml-2">
     <h1 class="!mb-2">Filters</h1>
@@ -172,16 +196,11 @@
    const toggleView = document.querySelector("#toggleView");
    const settings = document.getElementById("globeSettings");
 
-   // Initially keep the drawer hidden by applying translate-x-full
-    settings.classList.add('translate-x-full');
-
    toggleView.addEventListener("change", function () {
     if (toggleView.checked) {
-     settings.classList.remove("translate-x-full");
-     settings.classList.add("translate-x-0");
+     settings.style.transform = "translateX(0)";
     } else {
-     settings.classList.remove("translate-x-0");
-     settings.classList.add("translate-x-full");
+     settings.style.transform = "translateX(-100%)";
     }
    });
 
@@ -196,21 +215,18 @@
     }
 
     // Ensure the settings drawer is hidden initially
-    settings.classList.add('translate-x-full');
+    settings.style.transform = "translateX(-100%)";
 
     // Check the initial state of the toggleView checkbox
     if (toggleView.checked) {
-        settings.classList.remove('translate-x-full');
-        settings.classList.add('translate-x-0');
+        settings.style.transform = "translateX(0)";
     }
 
     toggleView.addEventListener("change", function () {
         if (toggleView.checked) {
-            settings.classList.remove("translate-x-full");
-            settings.classList.add('translate-x-0');
+            settings.style.transform = "translateX(0)";
         } else {
-            settings.classList.remove('translate-x-0');
-            settings.classList.add('translate-x-full');
+            settings.style.transform = "translateX(-100%)";
         }
     });
    });
