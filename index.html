@@ -128,6 +128,12 @@
    let subseaAssets = [];
    let surfVessels = [];
 
+   // Filter settings
+   let showPipelines = true;
+   let showPointsOfInterest = true;
+   let showVessels = true;
+   let showAssets = true;
+
    const globe = Globe()
     .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-dark.jpg")
     .bumpImageUrl(
@@ -212,6 +218,10 @@
   }
 
    function loadSubseaPipelines() {
+    if (!showPipelines) {
+        return([]);
+    }
+    
     return fetch("../data/subseaPipelines.json")
      .then((response) => {
       if (!response.ok) {
@@ -250,6 +260,10 @@
    }
 
    function loadSurfVessel() {
+    if (!showVessels) {
+        return([]);
+    }
+
     return fetch("../data/surfVessels.json")
      .then((response) => {
       if (!response.ok) {
@@ -279,6 +293,10 @@
    }
 
    function loadSubseaAssets() {
+    if (!showAssets) {
+        return([]);
+    }
+
     return fetch("../data/subseaAssets.json")
      .then((response) => {
       if (!response.ok) {
@@ -309,6 +327,10 @@
    }
 
    function loadPointsOfInterest() {
+    if (!showPointsOfInterest) {
+        return([]);
+    }
+
     return fetch("../data/pointsOfInterest.json")
      .then((response) => {
       if (!response.ok) {
@@ -402,10 +424,11 @@
                     `;
       break;
      case "pointOfInterest":
-      document.getElementById(
-       "popup-title"
-      ).textContent = `${point.name} (Point of Interest)`;
-      document.getElementById("popup-body").innerHTML = ``;
+      document.getElementById("popup-title").textContent = `${point.name} (Point of Interest)`;
+      document.getElementById("popup-body").innerHTML = `
+      <br>
+      <div>Description: ${point.description}</div>
+      `;
       console.log("Clicked a pointOfInterest");
       break;
      case "surfVessel":
